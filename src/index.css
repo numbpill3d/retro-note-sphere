@@ -19,6 +19,22 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'VT323';
+  src: url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Courier New';
+  src: local('Courier New');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 220 14% 96%;
@@ -59,6 +75,80 @@
     --sidebar-accent-foreground: 240 6% 10%;
     --sidebar-border: 220 13% 75%;
     --sidebar-ring: 217 91% 60%;
+
+    /* Theme-specific variables with default Win98 values */
+    --theme-bg: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAElBMVEVYWFlYWFlYWFlYWFlYWFlYWFnpgsd2AAAABXRSTLMAAAID7LPLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAN0lEQVQ4jWNgGAUkAMb///9BWDhpcJMQNoYBNglkN+BIk2wSgjhpcJMQNoYBNglkN+BIj4LBAQBbCyMR3NLhwQAAAABJRU5ErkJggg==");
+    --theme-font: 'MS Sans Serif';
+    --theme-button-bg: #d4d0c8;
+    --theme-button-border: #dfdfdf;
+    --theme-button-border-shadow: #808080;
+    --theme-highlight: #000080;
+    --theme-titlebar: #000080;
+    --theme-titlebar-text: #ffffff;
+    --theme-window-bg: #d4d0c8;
+    --theme-text: #000000;
+    --theme-window-border: #ffffff;
+    --theme-window-border-shadow: #808080;
+  }
+
+  [data-theme="cyber"] {
+    --theme-bg: linear-gradient(180deg, #000000 0%, #0B0B2B 50%, #000000 100%);
+    --theme-font: 'Courier New', monospace;
+    --theme-button-bg: #1a1a40;
+    --theme-button-border: #00ffaa;
+    --theme-button-border-shadow: #00ffaa;
+    --theme-highlight: #00ffaa;
+    --theme-titlebar: #1a1a40;
+    --theme-titlebar-text: #00ffaa;
+    --theme-window-bg: #0B0B2B;
+    --theme-text: #00ffaa;
+    --theme-window-border: #00ffaa;
+    --theme-window-border-shadow: #00ffaa;
+  }
+
+  [data-theme="terminal"] {
+    --theme-bg: #000000;
+    --theme-font: 'VT323', monospace;
+    --theme-button-bg: #000000;
+    --theme-button-border: #33ff00;
+    --theme-button-border-shadow: #33ff00;
+    --theme-highlight: #33ff00;
+    --theme-titlebar: #000000;
+    --theme-titlebar-text: #33ff00;
+    --theme-window-bg: #000000;
+    --theme-text: #33ff00;
+    --theme-window-border: #33ff00;
+    --theme-window-border-shadow: #33ff00;
+  }
+  
+  [data-theme="y2k"] {
+    --theme-bg: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    --theme-font: 'Arial', sans-serif;
+    --theme-button-bg: #ffcccc;
+    --theme-button-border: #ff99cc;
+    --theme-button-border-shadow: #cc66ff;
+    --theme-highlight: #ff6699;
+    --theme-titlebar: #cc66ff;
+    --theme-titlebar-text: #ffffff;
+    --theme-window-bg: #fff9f9;
+    --theme-text: #8A8A8A;
+    --theme-window-border: #ffccff;
+    --theme-window-border-shadow: #cc99ff;
+  }
+
+  [data-theme="hacker"] {
+    --theme-bg: #000000;
+    --theme-font: 'Courier New', monospace;
+    --theme-button-bg: #000000;
+    --theme-button-border: #00ff00;
+    --theme-button-border-shadow: #006600;
+    --theme-highlight: #00ff00;
+    --theme-titlebar: #000000;
+    --theme-titlebar-text: #00ff00;
+    --theme-window-bg: #000000;
+    --theme-text: #00ff00;
+    --theme-window-border: #00ff00;
+    --theme-window-border-shadow: #006600;
   }
 }
 
@@ -72,8 +162,9 @@
   }
 
   body {
-    @apply bg-win98-lightgray text-win98-black font-['MS_Sans_Serif'];
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAElBMVEVYWFlYWFlYWFlYWFlYWFlYWFnpgsd2AAAABXRSTLMAAAID7LPLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAN0lEQVQ4jWNgGAUkAMb///9BWDhpcJMQNoYBNglkN+BIk2wSgjhpcJMQNoYBNglkN+BIj4LBAQBbCyMR3NLhwQAAAABJRU5ErkJggg==");
+    @apply text-theme-text bg-black;
+    font-family: var(--theme-font);
+    background-image: var(--theme-bg);
     background-repeat: repeat;
     image-rendering: pixelated;
   }
@@ -85,74 +176,92 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-win98-lightgray;
+    background-color: var(--theme-window-bg);
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-win98-gray shadow-win98;
-    border: 1px solid #808080;
+    background-color: var(--theme-button-bg);
+    border: 1px solid var(--theme-button-border-shadow);
   }
 
   ::-webkit-scrollbar-button {
-    @apply bg-win98-lightgray shadow-win98;
+    background-color: var(--theme-button-bg);
     display: block;
     height: 16px;
     width: 16px;
-  }
-
-  ::-webkit-scrollbar-button:vertical:decrement {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpolygon points='8,4 13,10 3,10' fill='%23000000'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-  }
-
-  ::-webkit-scrollbar-button:vertical:increment {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpolygon points='8,12 13,6 3,6' fill='%23000000'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
+    border: 1px solid var(--theme-button-border);
+    border-bottom-color: var(--theme-button-border-shadow);
+    border-right-color: var(--theme-button-border-shadow);
   }
 }
 
 @layer components {
   .win98-window {
-    @apply bg-win98-lightgray border-2 border-solid shadow-win98;
-    border-top-color: #dfdfdf;
-    border-left-color: #dfdfdf;
-    border-right-color: #808080;
-    border-bottom-color: #808080;
+    background-color: var(--theme-window-bg);
+    border: 2px solid;
+    border-top-color: var(--theme-window-border);
+    border-left-color: var(--theme-window-border);
+    border-right-color: var(--theme-window-border-shadow);
+    border-bottom-color: var(--theme-window-border-shadow);
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px var(--theme-window-border), 
+                inset -2px -2px var(--theme-window-border-shadow), 
+                inset 2px 2px var(--theme-window-border);
   }
 
   .win98-window-inset {
-    @apply bg-win98-lightgray border-2 border-solid shadow-win98-inset;
-    border-top-color: #808080;
-    border-left-color: #808080;
-    border-right-color: #dfdfdf;
-    border-bottom-color: #dfdfdf;
+    background-color: var(--theme-window-bg);
+    border: 2px solid;
+    border-top-color: var(--theme-window-border-shadow);
+    border-left-color: var(--theme-window-border-shadow);
+    border-right-color: var(--theme-window-border);
+    border-bottom-color: var(--theme-window-border);
+    box-shadow: inset -1px -1px var(--theme-window-border), 
+                inset 1px 1px #0a0a0a, 
+                inset -2px -2px var(--theme-window-border),
+                inset 2px 2px var(--theme-window-border-shadow);
   }
   
   .win98-titlebar {
-    @apply bg-win98-blue text-white font-bold px-2 py-0.5 flex items-center justify-between;
+    background-color: var(--theme-titlebar);
+    color: var(--theme-titlebar-text);
+    font-weight: bold;
+    padding: 2px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   
   .win98-button {
-    @apply bg-win98-lightgray py-0.5 px-4 border-2 border-solid transition-all duration-100 active:shadow-win98-inset;
-    border-top-color: #dfdfdf;
-    border-left-color: #dfdfdf;
-    border-right-color: #808080;
-    border-bottom-color: #808080;
+    background-color: var(--theme-button-bg);
+    padding: 2px 16px;
+    border: 2px solid;
+    border-top-color: var(--theme-button-border);
+    border-left-color: var(--theme-button-border);
+    border-right-color: var(--theme-button-border-shadow);
+    border-bottom-color: var(--theme-button-border-shadow);
+    transition: all 100ms;
   }
   
   .win98-button:active {
-    border-top-color: #808080;
-    border-left-color: #808080;
-    border-right-color: #dfdfdf;
-    border-bottom-color: #dfdfdf;
+    border-top-color: var(--theme-button-border-shadow);
+    border-left-color: var(--theme-button-border-shadow);
+    border-right-color: var(--theme-button-border);
+    border-bottom-color: var(--theme-button-border);
+    box-shadow: inset -1px -1px var(--theme-window-border), 
+                inset 1px 1px var(--theme-window-border-shadow);
   }
   
   .win98-inset {
-    @apply bg-white border-2 border-solid shadow-win98-inset;
-    border-top-color: #808080;
-    border-left-color: #808080;
-    border-right-color: #dfdfdf;
-    border-bottom-color: #dfdfdf;
+    background-color: white;
+    border: 2px solid;
+    border-top-color: var(--theme-window-border-shadow);
+    border-left-color: var(--theme-window-border-shadow);
+    border-right-color: var(--theme-window-border);
+    border-bottom-color: var(--theme-window-border);
+    box-shadow: inset -1px -1px var(--theme-window-border), 
+                inset 1px 1px #0a0a0a, 
+                inset -2px -2px var(--theme-window-border),
+                inset 2px 2px var(--theme-window-border-shadow);
   }
   
   .pixel-text {

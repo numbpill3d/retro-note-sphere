@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { cn } from '../lib/utils';
 
 interface Win98ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'primary' | 'destructive';
@@ -15,10 +16,10 @@ const Win98Button: React.FC<Win98ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  // Map variant to classes
+  // Map variant to classes (using base win98-button class for styling)
   const variantClasses = {
-    default: 'bg-win98-lightgray text-win98-black',
-    primary: 'bg-win98-blue text-white',
+    default: '',
+    primary: 'bg-theme-highlight text-white',
     destructive: 'bg-red-600 text-white',
   }[variant];
 
@@ -31,13 +32,13 @@ const Win98Button: React.FC<Win98ButtonProps> = ({
 
   return (
     <button
-      className={`
-        win98-button select-none
-        ${variantClasses}
-        ${sizeClasses}
-        ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-win98-gray hover:bg-opacity-20'}
-        ${className}
-      `}
+      className={cn(
+        `win98-button select-none`,
+        variantClasses,
+        sizeClasses,
+        disabled ? 'opacity-50 cursor-not-allowed' : '',
+        className
+      )}
       disabled={disabled}
       {...props}
     >

@@ -6,12 +6,15 @@ import NoteTree from '../components/NoteTree';
 import MarkdownEditor from '../components/MarkdownEditor';
 import GraphView from '../components/GraphView';
 import Taskbar from '../components/Taskbar';
-import { X } from 'lucide-react';
+import ThemeSelector from '../components/ThemeSelector';
 import Win98Button from '../components/Win98Button';
+import { useTheme } from '../context/ThemeContext';
 
 const Index = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
+  const { theme } = useTheme();
 
   return (
     <NoteProvider>
@@ -57,7 +60,7 @@ const Index = () => {
                 <h2 className="font-bold text-lg mb-4">RetroNotes Help</h2>
                 
                 <h3 className="font-bold mt-4 mb-2">Getting Started</h3>
-                <p className="mb-2">Welcome to RetroNotes, a Windows 98-style note-taking application!</p>
+                <p className="mb-2">Welcome to RetroNotes, a retro-style note-taking application!</p>
                 
                 <h3 className="font-bold mt-4 mb-2">Features:</h3>
                 <ul className="list-disc pl-6 mb-4">
@@ -65,6 +68,7 @@ const Index = () => {
                   <li>Edit notes using Markdown syntax</li>
                   <li>View note relationships in the Graph View</li>
                   <li>Save notes automatically to your browser storage</li>
+                  <li>Choose from multiple retro themes (Win98, Cyberpunk, Terminal, Y2K, and Hacker)</li>
                 </ul>
                 
                 <h3 className="font-bold mt-4 mb-2">Keyboard Shortcuts:</h3>
@@ -86,10 +90,16 @@ const Index = () => {
               </div>
             </Win98Window>
           )}
+
+          <ThemeSelector 
+            isOpen={showThemeSelector} 
+            onClose={() => setShowThemeSelector(false)} 
+          />
         </div>
         <Taskbar 
           onOpenHelp={() => setShowHelp(true)} 
           onToggleGraph={() => setShowGraph(!showGraph)}
+          onOpenThemeSelector={() => setShowThemeSelector(true)}
           showGraph={showGraph}
         />
       </div>

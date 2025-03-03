@@ -64,6 +64,19 @@ export default {
 					white: '#ffffff',
 					highlight: '#0000ff',
 				},
+				// Theme colors
+				theme: {
+					'button-bg': 'var(--theme-button-bg)',
+					'button-border': 'var(--theme-button-border)',
+					'button-border-shadow': 'var(--theme-button-border-shadow)',
+					'highlight': 'var(--theme-highlight)',
+					'titlebar': 'var(--theme-titlebar)',
+					'titlebar-text': 'var(--theme-titlebar-text)',
+					'window-bg': 'var(--theme-window-bg)',
+					'text': 'var(--theme-text)',
+					'window-border': 'var(--theme-window-border)',
+					'window-border-shadow': 'var(--theme-window-border-shadow)',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

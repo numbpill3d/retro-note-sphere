@@ -61,7 +61,7 @@ const Win98Window: React.FC<Win98WindowProps> = ({
         <div className="flex items-center gap-1">
           {minimizable && (
             <button 
-              className="border-0 w-5 h-5 flex items-center justify-center bg-win98-lightgray text-win98-black shadow-win98 hover:bg-win98-gray"
+              className="border-0 w-5 h-5 flex items-center justify-center bg-theme-button-bg text-theme-text shadow-win98 hover:bg-win98-gray"
               onClick={() => {}}
             >
               <Minus size={14} />
@@ -69,7 +69,7 @@ const Win98Window: React.FC<Win98WindowProps> = ({
           )}
           {maximizable && (
             <button 
-              className="border-0 w-5 h-5 flex items-center justify-center bg-win98-lightgray text-win98-black shadow-win98 hover:bg-win98-gray"
+              className="border-0 w-5 h-5 flex items-center justify-center bg-theme-button-bg text-theme-text shadow-win98 hover:bg-win98-gray"
               onClick={toggleMaximize}
             >
               <Square size={14} />
@@ -77,7 +77,7 @@ const Win98Window: React.FC<Win98WindowProps> = ({
           )}
           {onClose && (
             <button 
-              className="border-0 w-5 h-5 flex items-center justify-center bg-win98-lightgray text-win98-black shadow-win98 hover:bg-win98-gray hover:text-win98-blue"
+              className="border-0 w-5 h-5 flex items-center justify-center bg-theme-button-bg text-theme-text shadow-win98 hover:bg-win98-gray hover:text-theme-highlight"
               onClick={handleClose}
             >
               <X size={14} />
