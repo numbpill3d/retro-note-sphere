@@ -3,10 +3,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNotes } from '../context/NoteContext';
 import ReactMarkdown from 'react-markdown';
 import Win98Button from './Win98Button';
+import NotionLikeToolbar from './NotionLikeToolbar';
 import { 
   Bold, Italic, List, ListOrdered, Image, Link, Code, 
   Heading1, Heading2, Heading3, CheckSquare, Calendar, Table, 
-  Clock, Tag, Upload, ArrowRightLeft, Highlighter
+  Clock, Tag, Upload, ArrowRightLeft, Highlighter,
+  CloudLightning, Save, Eye, Edit, LayoutGrid, Coffee, SquarePen,
+  FileText, Search, Bookmark, Star, History, MoreHorizontal
 } from 'lucide-react';
 
 const MarkdownEditor: React.FC = () => {
@@ -17,6 +20,9 @@ const MarkdownEditor: React.FC = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [showTags, setShowTags] = useState(false);
   const [viewMode, setViewMode] = useState<'edit' | 'preview' | 'split'>('preview');
+  const [showHistory, setShowHistory] = useState(false);
+  const [isSaved, setIsSaved] = useState(true);
+  const [showOptions, setShowOptions] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
   useEffect(() => {
@@ -29,10 +35,13 @@ const MarkdownEditor: React.FC = () => {
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
+    setIsSaved(false);
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
+    setIsSaved(false);
+    
     // Auto-detect tags with hashtags
     const hashtagRegex = /#[a-zA-Z0-9_]+/g;
     const foundTags = e.target.value.match(hashtagRegex) || [];
@@ -46,6 +55,7 @@ const MarkdownEditor: React.FC = () => {
         content,
         tags
       });
+      setIsSaved(true);
       if (viewMode === 'edit') {
         setViewMode('preview');
       }
@@ -60,6 +70,37 @@ const MarkdownEditor: React.FC = () => {
       setEditMode(true);
       setViewMode('edit');
     }
+  };
+
+  const handleToolbarAction = (action: string, template?: string) => {
+    if (action === 'format' && template) {
+      insertMarkdown(template);
+    } else if (action === 'insert' && template) {
+      insertText(template);
+    } else if (action === 'action' && template === 'uploadImage') {
+      // This would ideally open a file dialog
+      alert('Image upload would be implemented here');
+    }
+  };
+
+  const insertText = (text: string) => {
+    if (!textareaRef.current) return;
+    
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const beforeSelection = content.substring(0, start);
+    const afterSelection = content.substring(start);
+    
+    const newText = beforeSelection + text + afterSelection;
+    setContent(newText);
+    setIsSaved(false);
+    
+    // Set cursor position after inserted text
+    setTimeout(() => {
+      textarea.focus();
+      const newPosition = start + text.length;
+      textarea.setSelectionRange(newPosition, newPosition);
+    }, 0);
   };
 
   const insertMarkdown = (markdownTemplate: string) => {
@@ -91,6 +132,7 @@ const MarkdownEditor: React.FC = () => {
     }
     
     setContent(newText);
+    setIsSaved(false);
     textarea.focus();
   };
 
@@ -99,6 +141,7 @@ const MarkdownEditor: React.FC = () => {
     
     const newTags = [...tags, tagName];
     setTags(newTags);
+    setIsSaved(false);
     if (currentNote) {
       updateNote(currentNote.id, { tags: newTags });
     }
@@ -107,6 +150,7 @@ const MarkdownEditor: React.FC = () => {
   const removeTag = (tagName: string) => {
     const newTags = tags.filter(tag => tag !== tagName);
     setTags(newTags);
+    setIsSaved(false);
     if (currentNote) {
       updateNote(currentNote.id, { tags: newTags });
     }
@@ -119,124 +163,6 @@ const MarkdownEditor: React.FC = () => {
       handleSave();
     }
   };
-
-  const renderToolbar = () => (
-    <div className="win98-window p-1 flex flex-wrap items-center gap-1 border-b border-win98-gray">
-      <Win98Button 
-        variant="icon" 
-        title="Bold (Ctrl+B)"
-        icon={<Bold size={16} />}
-        onClick={() => insertMarkdown('**{{text}}**')}
-      />
-      <Win98Button 
-        variant="icon" 
-        title="Italic (Ctrl+I)"
-        icon={<Italic size={16} />}
-        onClick={() => insertMarkdown('*{{text}}*')}
-      />
-      <Win98Button 
-        variant="icon"
-        title="Heading 1"
-        icon={<Heading1 size={16} />}
-        onClick={() => insertMarkdown('# {{text}}')}
-      />
-      <Win98Button 
-        variant="icon"
-        title="Heading 2"
-        icon={<Heading2 size={16} />}
-        onClick={() => insertMarkdown('## {{text}}')}
-      />
-      <Win98Button 
-        variant="icon"
-        title="Heading 3"
-        icon={<Heading3 size={16} />}
-        onClick={() => insertMarkdown('### {{text}}')}
-      />
-      <div className="border-r border-win98-gray mx-1 h-5"></div>
-      
-      <Win98Button 
-        variant="icon"
-        title="Bulleted List"
-        icon={<List size={16} />}
-        onClick={() => insertMarkdown('- {{text}}')}
-      />
-      <Win98Button 
-        variant="icon"
-        title="Numbered List"
-        icon={<ListOrdered size={16} />}
-        onClick={() => insertMarkdown('1. {{text}}')}
-      />
-      <Win98Button 
-        variant="icon"
-        title="Todo List"
-        icon={<CheckSquare size={16} />}
-        onClick={() => insertMarkdown('- [ ] {{text}}')}
-      />
-      <div className="border-r border-win98-gray mx-1 h-5"></div>
-      
-      <Win98Button 
-        variant="icon"
-        title="Link"
-        icon={<Link size={16} />}
-        onClick={() => insertMarkdown('[{{text}}](url)')}
-      />
-      <Win98Button 
-        variant="icon"
-        title="Image"
-        icon={<Image size={16} />}
-        onClick={() => insertMarkdown('![{{text}}](image_url)')}
-      />
-      <Win98Button 
-        variant="icon"
-        title="Code"
-        icon={<Code size={16} />}
-        onClick={() => insertMarkdown('`{{text}}`')}
-      />
-      <div className="border-r border-win98-gray mx-1 h-5"></div>
-      
-      <Win98Button 
-        variant="icon"
-        title="Table"
-        icon={<Table size={16} />}
-        onClick={() => insertMarkdown('| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |')}
-      />
-      <Win98Button 
-        variant="icon"
-        title="Highlight"
-        icon={<Highlighter size={16} />}
-        onClick={() => insertMarkdown('=={{text}}==')}
-      />
-      <Win98Button 
-        variant="icon"
-        title="Tags"
-        icon={<Tag size={16} />}
-        onClick={() => setShowTags(!showTags)}
-      />
-      <div className="flex-1"></div>
-      
-      <Win98Button 
-        size="sm"
-        variant={viewMode === 'edit' ? 'primary' : 'default'}
-        onClick={() => setViewMode('edit')}
-      >
-        Edit
-      </Win98Button>
-      <Win98Button 
-        size="sm"
-        variant={viewMode === 'preview' ? 'primary' : 'default'}
-        onClick={() => { handleSave(); setViewMode('preview'); }}
-      >
-        Preview
-      </Win98Button>
-      <Win98Button 
-        size="sm"
-        variant={viewMode === 'split' ? 'primary' : 'default'}
-        onClick={() => setViewMode('split')}
-      >
-        Split
-      </Win98Button>
-    </div>
-  );
 
   if (!currentNote) {
     return (
@@ -251,27 +177,100 @@ const MarkdownEditor: React.FC = () => {
   return (
     <div className="h-full flex flex-col">
       <div className="flex justify-between items-center p-2 border-b border-win98-gray">
-        {editMode ? (
-          <input
-            type="text"
-            value={title}
-            onChange={handleTitleChange}
-            className="win98-inset flex-1 text-sm px-2 py-1 mr-2 focus:outline-none"
-            placeholder="Note title"
+        <div className="flex items-center flex-1">
+          {editMode ? (
+            <input
+              type="text"
+              value={title}
+              onChange={handleTitleChange}
+              className="win98-inset flex-1 text-sm px-2 py-1 mr-2 focus:outline-none"
+              placeholder="Note title"
+            />
+          ) : (
+            <h3 className="text-sm font-bold truncate">{title || 'Untitled Note'}</h3>
+          )}
+        </div>
+        
+        <div className="flex space-x-1">
+          {!isSaved && (
+            <Win98Button 
+              size="sm" 
+              icon={<Save size={14} />}
+              onClick={handleSave}
+              tooltip="Save note"
+            >
+              Save
+            </Win98Button>
+          )}
+          
+          <Win98Button 
+            onClick={toggleEditMode} 
+            size="sm" 
+            icon={editMode ? <Eye size={14} /> : <Edit size={14} />}
+            tooltip={editMode ? "Preview" : "Edit"}
+          >
+            {editMode ? 'Preview' : 'Edit'}
+          </Win98Button>
+          
+          <Win98Button 
+            size="sm" 
+            icon={<MoreHorizontal size={14} />}
+            onClick={() => setShowOptions(!showOptions)}
+            tooltip="More options"
           />
-        ) : (
-          <h3 className="text-sm font-bold truncate">{title || 'Untitled Note'}</h3>
-        )}
-        <Win98Button 
-          onClick={toggleEditMode} 
-          size="sm" 
-          icon={editMode ? <ArrowRightLeft size={14} /> : <ArrowRightLeft size={14} />}
-        >
-          {editMode ? 'Save' : 'Edit'}
-        </Win98Button>
+        </div>
       </div>
       
-      {editMode && renderToolbar()}
+      {showOptions && (
+        <div className="win98-window absolute right-4 top-16 z-10 shadow-win98 w-48">
+          <div className="p-1">
+            <Win98Button 
+              variant="menu" 
+              className="py-1 px-2" 
+              size="sm"
+              icon={<Star size={14} />}
+              onClick={() => alert('Feature would be implemented here')}
+            >
+              Add to Favorites
+            </Win98Button>
+            <Win98Button 
+              variant="menu" 
+              className="py-1 px-2" 
+              size="sm"
+              icon={<Bookmark size={14} />}
+              onClick={() => alert('Feature would be implemented here')}
+            >
+              Bookmark
+            </Win98Button>
+            <Win98Button 
+              variant="menu" 
+              className="py-1 px-2" 
+              size="sm"
+              icon={<History size={14} />}
+              onClick={() => setShowHistory(!showHistory)}
+            >
+              View History
+            </Win98Button>
+            <Win98Button 
+              variant="menu" 
+              className="py-1 px-2" 
+              size="sm"
+              icon={<Search size={14} />}
+              onClick={() => alert('Feature would be implemented here')}
+            >
+              Search in Note
+            </Win98Button>
+          </div>
+        </div>
+      )}
+      
+      {editMode && (
+        <NotionLikeToolbar 
+          onAction={handleToolbarAction}
+          viewMode={viewMode}
+          onViewChange={setViewMode}
+        />
+      )}
       
       {showTags && (
         <div className="win98-window p-2 border-b border-win98-gray flex flex-wrap gap-1">

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNotes, NoteType } from '../context/NoteContext';
 import { 
@@ -37,7 +36,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
 
   const handleCreateChild = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newNote = createNote(note.id);
+    createNote(note.id);
     toggleFolder(note.id); // Expand folder after creating a note
   };
 
@@ -64,11 +63,13 @@ const NoteItem: React.FC<NoteItemProps> = ({
   const handleDuplicate = (e: React.MouseEvent) => {
     e.stopPropagation();
     const newNote = createNote(note.parentId);
-    updateNote(newNote.id, { 
-      title: `${note.title} (Copy)`,
-      content: note.content,
-      tags: note.tags
-    });
+    if (newNote) {
+      updateNote(newNote.id, { 
+        title: `${note.title} (Copy)`,
+        content: note.content,
+        tags: note.tags
+      });
+    }
   };
   
   const formattedDate = new Date(note.updatedAt).toLocaleDateString();
