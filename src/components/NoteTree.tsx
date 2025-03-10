@@ -36,7 +36,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
 
   const handleCreateChild = (e: React.MouseEvent) => {
     e.stopPropagation();
-    createNote(note.id);
+    const newNote = createNote(note.id);
     toggleFolder(note.id); // Expand folder after creating a note
   };
 
