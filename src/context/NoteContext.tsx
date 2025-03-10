@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -16,7 +15,7 @@ export type NoteType = {
 type NoteContextType = {
   notes: NoteType[];
   currentNote: NoteType | null;
-  createNote: (parentId: string | null) => void;
+  createNote: (parentId: string | null) => NoteType;
   updateNote: (id: string, data: Partial<NoteType>) => void;
   deleteNote: (id: string) => void;
   setCurrentNote: (note: NoteType | null) => void;
