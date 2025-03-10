@@ -35,6 +35,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Pixelify Sans';
+  src: url('https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 220 14% 96%;
@@ -149,6 +157,51 @@
     --theme-text: #00ff00;
     --theme-window-border: #00ff00;
     --theme-window-border-shadow: #006600;
+  }
+  
+  [data-theme="coffee"] {
+    --theme-bg: #2C1D1A;
+    --theme-font: 'Times New Roman', serif;
+    --theme-button-bg: #4C3528;
+    --theme-button-border: #84563C;
+    --theme-button-border-shadow: #5C3D2E;
+    --theme-highlight: #D1A77F;
+    --theme-titlebar: #5C3D2E;
+    --theme-titlebar-text: #D1A77F;
+    --theme-window-bg: #382318;
+    --theme-text: #D1A77F;
+    --theme-window-border: #84563C;
+    --theme-window-border-shadow: #2C1D1A;
+  }
+  
+  [data-theme="retro"] {
+    --theme-bg: #6699CC;
+    --theme-font: 'Pixelify Sans', sans-serif;
+    --theme-button-bg: #336699;
+    --theme-button-border: #99CCFF;
+    --theme-button-border-shadow: #003366;
+    --theme-highlight: #FF6633;
+    --theme-titlebar: #336699;
+    --theme-titlebar-text: #FFFFFF;
+    --theme-window-bg: #99CCFF;
+    --theme-text: #000066;
+    --theme-window-border: #99CCFF;
+    --theme-window-border-shadow: #336699;
+  }
+  
+  [data-theme="minimal"] {
+    --theme-bg: #FFFFFF;
+    --theme-font: 'Arial', sans-serif;
+    --theme-button-bg: #F0F0F0;
+    --theme-button-border: #DDDDDD;
+    --theme-button-border-shadow: #AAAAAA;
+    --theme-highlight: #333333;
+    --theme-titlebar: #EEEEEE;
+    --theme-titlebar-text: #333333;
+    --theme-window-bg: #FFFFFF;
+    --theme-text: #333333;
+    --theme-window-border: #EEEEEE;
+    --theme-window-border-shadow: #DDDDDD;
   }
 }
 
@@ -267,5 +320,46 @@
   .pixel-text {
     image-rendering: pixelated;
     text-rendering: geometricPrecision;
+  }
+  
+  .hover-highlight:hover {
+    background-color: var(--theme-highlight);
+    color: var(--theme-titlebar-text);
+    transition: all 0.2s;
+  }
+  
+  .theme-transition {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  
+  .note-card {
+    @apply win98-window p-2 cursor-pointer hover:opacity-90 transition;
+  }
+  
+  .markdown-content {
+    @apply prose prose-sm max-w-none;
+  }
+  
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3 {
+    color: var(--theme-highlight);
+  }
+  
+  .markdown-content a {
+    color: var(--theme-highlight);
+    text-decoration: underline;
+  }
+  
+  .markdown-content code {
+    background-color: var(--theme-button-bg);
+    padding: 2px 4px;
+    border-radius: 2px;
+  }
+  
+  .markdown-content blockquote {
+    border-left: 3px solid var(--theme-highlight);
+    padding-left: 1rem;
+    opacity: 0.8;
   }
 }
