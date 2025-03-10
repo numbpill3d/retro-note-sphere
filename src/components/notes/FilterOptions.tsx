@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ViewOption } from './types';
-import { ArrowUpDown, BookMarkIcon, ClockIcon, FilesIcon, HashIcon, FileQuestionIcon } from 'lucide-react';
+import { ArrowUpDown, BookmarkIcon, ClockIcon, FilesIcon, HashIcon, FileQuestionIcon } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 interface FilterOptionsProps {
@@ -12,7 +12,7 @@ interface FilterOptionsProps {
 const FilterOptions: React.FC<FilterOptionsProps> = ({ viewMode, setViewMode }) => {
   const options = [
     { id: 'all', label: 'All Notes', icon: <FilesIcon size={14} /> },
-    { id: 'favorites', label: 'Favorites', icon: <BookMarkIcon size={14} /> },
+    { id: 'favorites', label: 'Favorites', icon: <BookmarkIcon size={14} /> },
     { id: 'recent', label: 'Recently Updated', icon: <ClockIcon size={14} /> },
     { id: 'tags', label: 'Tagged Notes', icon: <HashIcon size={14} /> },
     { id: 'untagged', label: 'Untagged Notes', icon: <FileQuestionIcon size={14} /> },
