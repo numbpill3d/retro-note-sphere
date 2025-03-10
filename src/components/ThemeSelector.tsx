@@ -5,7 +5,7 @@ import Win98Button from './Win98Button';
 import Win98Window from './Win98Window';
 import { 
   Monitor, Terminal, Laptop, Palette, Code, Coffee, Brush, Sparkles, 
-  Zap, FileCode, Sun, Waves, Sunset, Mountains, Star, Scroll, Droplets,
+  Zap, FileCode, Sun, Waves, Sunset, Mountain, Star, Scroll, Droplets,
   Moon, Settings, Eye, ArrowLeft, ArrowRight, ToggleLeft, ToggleRight,
   Text, PanelLeft, PanelRight, Columns
 } from 'lucide-react';
@@ -38,7 +38,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ isOpen, onClose }) => {
     { id: 'retro', name: 'Retro Art', icon: <Palette size={16} />, description: 'Vibrant retro art style' },
     { id: 'minimal', name: 'Minimal', icon: <Brush size={16} />, description: 'Clean, distraction-free interface' },
     { id: 'vaporwave', name: 'Vaporwave', icon: <Sunset size={16} />, description: '80s retro-futurism with pink/blue aesthetics' },
-    { id: 'forest', name: 'Forest', icon: <Mountains size={16} />, description: 'Calming natural green tones' },
+    { id: 'forest', name: 'Forest', icon: <Mountain size={16} />, description: 'Calming natural green tones' },
     { id: 'midnight', name: 'Midnight', icon: <Moon size={16} />, description: 'Dark blue night-time theme' },
     { id: 'bubblegum', name: 'Bubblegum', icon: <Droplets size={16} />, description: 'Fun, pastel pink and blue' },
     { id: 'papyrus', name: 'Papyrus', icon: <Scroll size={16} />, description: 'Elegant beige parchment-like style' },
