@@ -4,12 +4,14 @@ import { useNotes } from '../context/NoteContext';
 import ReactMarkdown from 'react-markdown';
 import Win98Button from './Win98Button';
 import NotionLikeToolbar from './NotionLikeToolbar';
+import WikiFeatures from './WikiFeatures';
 import { 
   Bold, Italic, List, ListOrdered, Image, Link, Code, 
   Heading1, Heading2, Heading3, CheckSquare, Calendar, Table, 
   Clock, Tag, Upload, ArrowRightLeft, Highlighter,
   CloudLightning, Save, Eye, Edit, LayoutGrid, Coffee, SquarePen,
-  FileText, Search, Bookmark, Star, History, MoreHorizontal
+  FileText, Search, Bookmark, Star, History, MoreHorizontal,
+  BookOpen
 } from 'lucide-react';
 
 const MarkdownEditor: React.FC = () => {
@@ -23,6 +25,7 @@ const MarkdownEditor: React.FC = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [isSaved, setIsSaved] = useState(true);
   const [showOptions, setShowOptions] = useState(false);
+  const [showWikiFeatures, setShowWikiFeatures] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
   useEffect(() => {
@@ -164,6 +167,46 @@ const MarkdownEditor: React.FC = () => {
     }
   };
 
+  const handleWikiLinkFormat = () => {
+    if (!textareaRef.current) return;
+    
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    
+    // Create an internal wiki link
+    const wikiLinkTemplate = `[[${selectedText || 'Page Title'}]]`;
+    
+    const beforeSelection = content.substring(0, start);
+    const afterSelection = content.substring(end);
+    const newText = beforeSelection + wikiLinkTemplate + afterSelection;
+    
+    setContent(newText);
+    setIsSaved(false);
+    
+    // Set cursor position appropriately
+    setTimeout(() => {
+      textarea.focus();
+      if (!selectedText) {
+        const newCursorPos = start + 2; // After the [[
+        textarea.setSelectionRange(newCursorPos, newCursorPos + 10); // Select "Page Title"
+      }
+    }, 0);
+  };
+
+  const parseWikiLinks = (content: string) => {
+    // This function converts [[Wiki Links]] to Markdown links for rendering
+    let parsedContent = content;
+    const wikiLinkRegex = /\[\[(.+?)\]\]/g;
+    
+    parsedContent = parsedContent.replace(wikiLinkRegex, (match, linkText) => {
+      return `[${linkText}](#${linkText.toLowerCase().replace(/\s+/g, '-')})`;
+    });
+    
+    return parsedContent;
+  };
+
   if (!currentNote) {
     return (
       <div className="flex h-full items-center justify-center text-gray-500">
@@ -192,6 +235,14 @@ const MarkdownEditor: React.FC = () => {
         </div>
         
         <div className="flex space-x-1">
+          <Win98Button 
+            variant="icon" 
+            size="sm"
+            onClick={() => setShowWikiFeatures(!showWikiFeatures)}
+            tooltip="Wiki Tools"
+            icon={<BookOpen size={14} />}
+          />
+          
           {!isSaved && (
             <Win98Button 
               size="sm" 
@@ -260,6 +311,15 @@ const MarkdownEditor: React.FC = () => {
             >
               Search in Note
             </Win98Button>
+            <Win98Button 
+              variant="menu" 
+              className="py-1 px-2" 
+              size="sm"
+              icon={<Tag size={14} />}
+              onClick={() => setShowTags(!showTags)}
+            >
+              Manage Tags
+            </Win98Button>
           </div>
         </div>
       )}
@@ -321,7 +381,7 @@ const MarkdownEditor: React.FC = () => {
           <div className="p-4 win98-inset h-full overflow-auto">
             {content ? (
               <ReactMarkdown className="prose prose-sm max-w-none">
-                {content}
+                {parseWikiLinks(content)}
               </ReactMarkdown>
             ) : (
               <p className="text-gray-500">No content. Click Edit to start writing.</p>
@@ -342,7 +402,7 @@ const MarkdownEditor: React.FC = () => {
             <div className="p-4 win98-inset w-1/2 h-full overflow-auto">
               {content ? (
                 <ReactMarkdown className="prose prose-sm max-w-none">
-                  {content}
+                  {parseWikiLinks(content)}
                 </ReactMarkdown>
               ) : (
                 <p className="text-gray-500">No content. Click Edit to start writing.</p>
@@ -351,6 +411,8 @@ const MarkdownEditor: React.FC = () => {
           </div>
         )}
       </div>
+      
+      {showWikiFeatures && <WikiFeatures noteId={currentNote.id} />}
       
       {children.length > 0 && (
         <div className="p-2 border-t border-win98-gray win98-window">

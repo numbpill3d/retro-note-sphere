@@ -1,5 +1,7 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { WikiPageStatus } from '../components/notes/types';
 
 // Types
 export type NoteType = {
@@ -10,6 +12,10 @@ export type NoteType = {
   createdAt: string;
   updatedAt: string;
   tags: string[];
+  wikiStatus?: WikiPageStatus;
+  contributors?: string[];
+  version?: number;
+  history?: { date: string; content: string; title: string }[];
 };
 
 type NoteContextType = {
@@ -21,6 +27,7 @@ type NoteContextType = {
   setCurrentNote: (note: NoteType | null) => void;
   getNoteChildren: (parentId: string | null) => NoteType[];
   getNoteById: (id: string) => NoteType | undefined;
+  getBacklinks: (noteId: string) => NoteType[];
 };
 
 const NoteContext = createContext<NoteContextType | undefined>(undefined);
@@ -59,11 +66,21 @@ export const NoteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const welcomeNote: NoteType = {
         id: uuidv4(),
         title: 'Welcome to RetroNotes',
-        content: '# Welcome to RetroNotes\n\nThis is your first note. You can edit it or create a new one.\n\n## Features\n\n- Markdown support\n- Hierarchical organization\n- Retro Windows 98 style\n\nEnjoy taking notes!',
+        content: '# Welcome to RetroNotes\n\n*Wiki Status: complete*\n\nThis is your first note. You can edit it or create a new one.\n\n## Features\n\n- Markdown support\n- Hierarchical organization\n- Retro Windows 98 style\n- Wiki-like features\n\nEnjoy taking notes!',
         parentId: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         tags: ['welcome'],
+        wikiStatus: 'complete',
+        contributors: ['System'],
+        version: 1,
+        history: [
+          {
+            date: new Date().toISOString(),
+            content: '# Welcome to RetroNotes\n\nThis is your first note. You can edit it or create a new one.',
+            title: 'Welcome to RetroNotes'
+          }
+        ]
       };
       
       setNotes([welcomeNote]);
@@ -88,6 +105,16 @@ export const NoteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       tags: [],
+      wikiStatus: 'stub',
+      contributors: ['User'],
+      version: 1,
+      history: [
+        {
+          date: new Date().toISOString(),
+          content: '',
+          title: 'Untitled Note'
+        }
+      ]
     };
 
     setNotes((prevNotes) => [...prevNotes, newNote]);
@@ -98,21 +125,45 @@ export const NoteProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Update a note
   const updateNote = (id: string, data: Partial<NoteType>) => {
     setNotes((prevNotes) => 
-      prevNotes.map((note) => 
-        note.id === id 
-          ? { 
-              ...note, 
-              ...data, 
-              updatedAt: new Date().toISOString() 
-            } 
-          : note
-      )
+      prevNotes.map((note) => {
+        if (note.id === id) {
+          // Create history entry if content or title is changed
+          const updatedHistory = note.history || [];
+          if ((data.content && data.content !== note.content) ||
+              (data.title && data.title !== note.title)) {
+            updatedHistory.push({
+              date: new Date().toISOString(),
+              content: data.content || note.content,
+              title: data.title || note.title,
+            });
+          }
+          
+          // Update version number
+          const updatedVersion = updatedHistory.length > (note.history?.length || 0) 
+            ? (note.version || 1) + 1 
+            : note.version || 1;
+            
+          return { 
+            ...note, 
+            ...data, 
+            updatedAt: new Date().toISOString(),
+            history: updatedHistory,
+            version: updatedVersion
+          };
+        }
+        return note;
+      })
     );
 
     // Update currentNote if it's the one being edited
     if (currentNote?.id === id) {
       setCurrentNote((prev) => 
-        prev ? { ...prev, ...data, updatedAt: new Date().toISOString() } : prev
+        prev ? { 
+          ...prev, 
+          ...data, 
+          updatedAt: new Date().toISOString(),
+          version: prev.version ? prev.version + 1 : 1
+        } : prev
       );
     }
   };
@@ -151,6 +202,15 @@ export const NoteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return notes.find(note => note.id === id);
   };
 
+  // Get all notes that link to the given noteId
+  const getBacklinks = (noteId: string) => {
+    return notes.filter(note => 
+      note.id !== noteId && 
+      (note.content.includes(`[](#${noteId})`) || 
+       note.content.includes(`#${noteId}`))
+    );
+  };
+
   const contextValue: NoteContextType = {
     notes,
     currentNote,
@@ -160,6 +220,7 @@ export const NoteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentNote,
     getNoteChildren,
     getNoteById,
+    getBacklinks,
   };
 
   return (

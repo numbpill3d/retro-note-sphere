@@ -203,6 +203,126 @@
     --theme-window-border: #EEEEEE;
     --theme-window-border-shadow: #DDDDDD;
   }
+
+  [data-theme="vaporwave"] {
+    --theme-bg: linear-gradient(45deg, #ff6ad5, #c774e8, #ad8cff, #8795e8, #94d0ff);
+    --theme-font: 'Arial', sans-serif;
+    --theme-button-bg: #ad8cff;
+    --theme-button-border: #ff6ad5;
+    --theme-button-border-shadow: #8795e8;
+    --theme-highlight: #ff6ad5;
+    --theme-titlebar: #ad8cff;
+    --theme-titlebar-text: #ffffff;
+    --theme-window-bg: rgba(173, 140, 255, 0.5);
+    --theme-text: #ffffff;
+    --theme-window-border: #ff6ad5;
+    --theme-window-border-shadow: #8795e8;
+  }
+
+  [data-theme="forest"] {
+    --theme-bg: linear-gradient(to bottom, #2e5f38, #1e3b24);
+    --theme-font: 'Georgia', serif;
+    --theme-button-bg: #2e5f38;
+    --theme-button-border: #7ea04d;
+    --theme-button-border-shadow: #1e3b24;
+    --theme-highlight: #a9d18e;
+    --theme-titlebar: #2e5f38;
+    --theme-titlebar-text: #ffffff;
+    --theme-window-bg: #3d7a4c;
+    --theme-text: #ffffff;
+    --theme-window-border: #7ea04d;
+    --theme-window-border-shadow: #1e3b24;
+  }
+
+  [data-theme="midnight"] {
+    --theme-bg: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    --theme-font: 'Verdana', sans-serif;
+    --theme-button-bg: #203a43;
+    --theme-button-border: #4d9bc1;
+    --theme-button-border-shadow: #0f2027;
+    --theme-highlight: #4d9bc1;
+    --theme-titlebar: #0f2027;
+    --theme-titlebar-text: #ffffff;
+    --theme-window-bg: #2c5364;
+    --theme-text: #e0f7ff;
+    --theme-window-border: #4d9bc1;
+    --theme-window-border-shadow: #0f2027;
+  }
+
+  [data-theme="bubblegum"] {
+    --theme-bg: linear-gradient(to right, #ffb6c1, #ffda89);
+    --theme-font: 'Comic Sans MS', cursive;
+    --theme-button-bg: #ffb6c1;
+    --theme-button-border: #ff8da1;
+    --theme-button-border-shadow: #ff699f;
+    --theme-highlight: #ff699f;
+    --theme-titlebar: #ffb6c1;
+    --theme-titlebar-text: #ffffff;
+    --theme-window-bg: #ffe8f6;
+    --theme-text: #ff699f;
+    --theme-window-border: #ff8da1;
+    --theme-window-border-shadow: #ff699f;
+  }
+
+  [data-theme="papyrus"] {
+    --theme-bg: #f5e7c1;
+    --theme-font: 'Papyrus', 'Georgia', serif;
+    --theme-button-bg: #e8d6af;
+    --theme-button-border: #c3b091;
+    --theme-button-border-shadow: #a19274;
+    --theme-highlight: #8b7355;
+    --theme-titlebar: #c3b091;
+    --theme-titlebar-text: #5c4934;
+    --theme-window-bg: #f5e7c1;
+    --theme-text: #5c4934;
+    --theme-window-border: #c3b091;
+    --theme-window-border-shadow: #a19274;
+  }
+
+  [data-theme="sunshine"] {
+    --theme-bg: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    --theme-font: 'Tahoma', sans-serif;
+    --theme-button-bg: #f6d365;
+    --theme-button-border: #fdb137;
+    --theme-button-border-shadow: #fd9346;
+    --theme-highlight: #fd7e14;
+    --theme-titlebar: #f6d365;
+    --theme-titlebar-text: #ffffff;
+    --theme-window-bg: #fff8e5;
+    --theme-text: #fd7e14;
+    --theme-window-border: #fdb137;
+    --theme-window-border-shadow: #fd9346;
+  }
+
+  [data-theme="ocean"] {
+    --theme-bg: linear-gradient(to bottom, #1a2980, #26d0ce);
+    --theme-font: 'Trebuchet MS', sans-serif;
+    --theme-button-bg: #26d0ce;
+    --theme-button-border: #1a2980;
+    --theme-button-border-shadow: #19195c;
+    --theme-highlight: #26d0ce;
+    --theme-titlebar: #1a2980;
+    --theme-titlebar-text: #ffffff;
+    --theme-window-bg: #c4f9f8;
+    --theme-text: #1a2980;
+    --theme-window-border: #26d0ce;
+    --theme-window-border-shadow: #19195c;
+  }
+
+  [data-theme="starlight"] {
+    --theme-bg: #0a1128 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect width="100%" height="100%" fill="rgba(0,0,0,0)"/><circle cx="20" cy="30" r="1" fill="white" /><circle cx="60" cy="70" r="1" fill="white" /><circle cx="100" cy="10" r="0.6" fill="white" /><circle cx="200" cy="90" r="0.8" fill="white" /><circle cx="250" cy="60" r="0.4" fill="white" /><circle cx="300" cy="30" r="0.7" fill="white" /><circle cx="320" cy="100" r="0.5" fill="white" /><circle cx="10" cy="130" r="0.8" fill="white" /><circle cx="90" cy="180" r="0.6" fill="white" /><circle cx="180" cy="140" r="1" fill="white" /><circle cx="240" cy="130" r="0.5" fill="white" /><circle cx="280" cy="190" r="0.7" fill="white" /><circle cx="350" cy="150" r="0.9" fill="white" /><circle cx="40" cy="230" r="0.6" fill="white" /><circle cx="130" cy="260" r="0.8" fill="white" /><circle cx="190" cy="210" r="0.5" fill="white" /><circle cx="270" cy="240" r="1" fill="white" /><circle cx="330" cy="220" r="0.7" fill="white" /><circle cx="20" cy="290" r="0.9" fill="white" /><circle cx="70" cy="320" r="0.5" fill="white" /><circle cx="150" cy="300" r="0.7" fill="white" /><circle cx="220" cy="330" r="0.6" fill="white" /><circle cx="280" cy="290" r="0.8" fill="white" /><circle cx="360" cy="340" r="1" fill="white" /><circle cx="50" cy="380" r="0.7" fill="white" /><circle cx="120" cy="350" r="0.5" fill="white" /><circle cx="200" cy="390" r="0.9" fill="white" /><circle cx="270" cy="370" r="0.7" fill="white" /><circle cx="340" cy="380" r="0.8" fill="white" /></svg>');
+    --theme-font: 'Century Gothic', sans-serif;
+    --theme-button-bg: #0a1128;
+    --theme-button-border: #4f8fba;
+    --theme-button-border-shadow: #0a1128;
+    --theme-highlight: #c2e7ff;
+    --theme-titlebar: #0a1128;
+    --theme-titlebar-text: #c2e7ff;
+    --theme-window-bg: #0a1128;
+    --theme-text: #c2e7ff;
+    --theme-window-border: #4f8fba;
+    --theme-window-border-shadow: #0a1128;
+  }
 }
 
 @layer base {
@@ -361,5 +481,35 @@
     border-left: 3px solid var(--theme-highlight);
     padding-left: 1rem;
     opacity: 0.8;
+  }
+
+  /* Wiki-specific styles */
+  .wiki-link {
+    color: var(--theme-highlight);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--theme-highlight);
+  }
+  
+  .wiki-link:hover {
+    background-color: rgba(var(--theme-highlight), 0.1);
+  }
+  
+  .wiki-toc {
+    background-color: rgba(var(--theme-window-bg), 0.5);
+    border: 1px solid var(--theme-window-border);
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .wiki-status-stub {
+    color: #ff6b6b;
+  }
+  
+  .wiki-status-draft {
+    color: #feca57;
+  }
+  
+  .wiki-status-complete {
+    color: #1dd1a1;
   }
 }
