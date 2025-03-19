@@ -234,7 +234,8 @@ const MarkdownEditor: React.FC = () => {
           )}
         </div>
         
-        <div className="flex space-x-1">
+        {/* Fixed the button layout here */}
+        <div className="flex gap-1">
           <Win98Button 
             variant="icon" 
             size="sm"
@@ -277,7 +278,7 @@ const MarkdownEditor: React.FC = () => {
           <div className="p-1">
             <Win98Button 
               variant="menu" 
-              className="py-1 px-2" 
+              className="py-1 px-2 w-full text-left" 
               size="sm"
               icon={<Star size={14} />}
               onClick={() => alert('Feature would be implemented here')}
@@ -286,7 +287,7 @@ const MarkdownEditor: React.FC = () => {
             </Win98Button>
             <Win98Button 
               variant="menu" 
-              className="py-1 px-2" 
+              className="py-1 px-2 w-full text-left" 
               size="sm"
               icon={<Bookmark size={14} />}
               onClick={() => alert('Feature would be implemented here')}
@@ -295,7 +296,7 @@ const MarkdownEditor: React.FC = () => {
             </Win98Button>
             <Win98Button 
               variant="menu" 
-              className="py-1 px-2" 
+              className="py-1 px-2 w-full text-left" 
               size="sm"
               icon={<History size={14} />}
               onClick={() => setShowHistory(!showHistory)}
@@ -304,7 +305,7 @@ const MarkdownEditor: React.FC = () => {
             </Win98Button>
             <Win98Button 
               variant="menu" 
-              className="py-1 px-2" 
+              className="py-1 px-2 w-full text-left" 
               size="sm"
               icon={<Search size={14} />}
               onClick={() => alert('Feature would be implemented here')}
@@ -313,7 +314,7 @@ const MarkdownEditor: React.FC = () => {
             </Win98Button>
             <Win98Button 
               variant="menu" 
-              className="py-1 px-2" 
+              className="py-1 px-2 w-full text-left" 
               size="sm"
               icon={<Tag size={14} />}
               onClick={() => setShowTags(!showTags)}
