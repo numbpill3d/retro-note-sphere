@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WikiPageStatus } from '../components/notes/types';
@@ -68,11 +67,53 @@ export const NoteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const welcomeNote: NoteType = {
         id: uuidv4(),
         title: 'Welcome to RetroNotes',
-        content: '# Welcome to RetroNotes\n\n*Wiki Status: complete*\n\nThis is your first note. You can edit it or create a new one.\n\n## Features\n\n- Markdown support\n- Hierarchical organization\n- Retro Windows 98 style\n- Wiki-like features\n\nEnjoy taking notes!',
+        content: `# Welcome to RetroNotes
+
+*Wiki Status: complete*
+
+This is your first note. You can edit it or create a new one.
+
+## Features
+
+- Markdown support
+- Hierarchical organization
+- Retro Windows 98 style
+- Wiki-like features
+
+## Text Formatting Shortcuts
+
+| Shortcut | Effect |
+|----------|--------|
+| **Ctrl+B** | **Bold Text** |
+| **Ctrl+I** | *Italic Text* |
+| **Ctrl+K** | [Create Link](https://example.com) |
+
+## Wiki Linking
+
+To create internal links between notes:
+
+1. Type \`[[\` followed by the note title and close with \`]]\`
+2. Example: \`[[Another Note]]\` creates a wiki-link
+3. Wiki links show up in the graph view and create backlinks automatically
+
+## Markdown Tips
+
+- Use \`#\` for headings (# H1, ## H2, etc.)
+- Use \`-\` or \`*\` for bullet lists
+- Use \`1.\` for numbered lists
+- Use \`> \` for block quotes
+- Use \`\`\`code\`\`\` for code blocks
+
+## Tags
+
+- Add tags with #hashtags in your note content
+- Tags are automatically extracted and can be used for filtering
+
+Enjoy taking notes!`,
         parentId: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        tags: ['welcome'],
+        tags: ['welcome', 'help'],
         wikiStatus: 'complete',
         contributors: ['System'],
         version: 1,
@@ -229,11 +270,25 @@ export const NoteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Get all notes that link to the given noteId
   const getBacklinks = (noteId: string) => {
-    return notes.filter(note => 
-      note.id !== noteId && 
-      (note.content.includes(`[](#${noteId})`) || 
-       note.content.includes(`#${noteId}`))
-    );
+    return notes.filter(note => {
+      if (note.id === noteId) return false;
+      
+      // Match both [[Note Name]] wiki links and direct #noteId references
+      const wikiLinkRegex = new RegExp(`\\[\\[(.*?)\\]\\]`, 'g');
+      const directLinkRegex = new RegExp(`#${noteId}`, 'g');
+      
+      // Extract all wiki links
+      const wikiLinks = [...note.content.matchAll(wikiLinkRegex)].map(match => match[1]);
+      
+      // Check if any wiki link matches the title of the target note
+      const targetNote = notes.find(n => n.id === noteId);
+      if (targetNote && wikiLinks.some(link => link.toLowerCase() === targetNote.title.toLowerCase())) {
+        return true;
+      }
+      
+      // Check for direct links
+      return directLinkRegex.test(note.content);
+    });
   };
 
   const contextValue: NoteContextType = {

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNotes } from '../context/NoteContext';
 import ReactMarkdown from 'react-markdown';
@@ -45,7 +44,6 @@ const MarkdownEditor: React.FC = () => {
     setContent(e.target.value);
     setIsSaved(false);
     
-    // Auto-detect tags with hashtags
     const hashtagRegex = /#[a-zA-Z0-9_]+/g;
     const foundTags = e.target.value.match(hashtagRegex) || [];
     setTags(Array.from(new Set(foundTags.map(tag => tag.substring(1)))));
@@ -81,7 +79,6 @@ const MarkdownEditor: React.FC = () => {
     } else if (action === 'insert' && template) {
       insertText(template);
     } else if (action === 'action' && template === 'uploadImage') {
-      // This would ideally open a file dialog
       alert('Image upload would be implemented here');
     }
   };
@@ -98,7 +95,6 @@ const MarkdownEditor: React.FC = () => {
     setContent(newText);
     setIsSaved(false);
     
-    // Set cursor position after inserted text
     setTimeout(() => {
       textarea.focus();
       const newPosition = start + text.length;
@@ -127,7 +123,6 @@ const MarkdownEditor: React.FC = () => {
       newText = beforeSelection + placeholder + afterSelection;
       cursorPosition = start + placeholder.indexOf('text');
       
-      // Move cursor to appropriate position
       setTimeout(() => {
         textarea.focus();
         textarea.setSelectionRange(cursorPosition, cursorPosition + 4);
@@ -160,7 +155,6 @@ const MarkdownEditor: React.FC = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Handle Ctrl+S for save
     if (e.ctrlKey && e.key === 's') {
       e.preventDefault();
       handleSave();
@@ -175,7 +169,6 @@ const MarkdownEditor: React.FC = () => {
     const end = textarea.selectionEnd;
     const selectedText = content.substring(start, end);
     
-    // Create an internal wiki link
     const wikiLinkTemplate = `[[${selectedText || 'Page Title'}]]`;
     
     const beforeSelection = content.substring(0, start);
@@ -185,26 +178,116 @@ const MarkdownEditor: React.FC = () => {
     setContent(newText);
     setIsSaved(false);
     
-    // Set cursor position appropriately
     setTimeout(() => {
       textarea.focus();
       if (!selectedText) {
-        const newCursorPos = start + 2; // After the [[
-        textarea.setSelectionRange(newCursorPos, newCursorPos + 10); // Select "Page Title"
+        const newCursorPos = start + 2;
+        textarea.setSelectionRange(newCursorPos, newCursorPos + 10);
       }
     }, 0);
   };
 
   const parseWikiLinks = (content: string) => {
-    // This function converts [[Wiki Links]] to Markdown links for rendering
+    const { notes, createNote } = useNotes();
+    
     let parsedContent = content;
     const wikiLinkRegex = /\[\[(.+?)\]\]/g;
     
     parsedContent = parsedContent.replace(wikiLinkRegex, (match, linkText) => {
-      return `[${linkText}](#${linkText.toLowerCase().replace(/\s+/g, '-')})`;
+      const linkedNote = notes.find(note => 
+        note.title.toLowerCase() === linkText.toLowerCase()
+      );
+      
+      if (linkedNote) {
+        return `[${linkText}](#${linkedNote.id})`;
+      } else {
+        return `[${linkText}](#create-note-${linkText.toLowerCase().replace(/\s+/g, '-')})`;
+      }
     });
     
     return parsedContent;
+  };
+
+  const handleWikiLinkClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    
+    if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#create-note-')) {
+      e.preventDefault();
+      
+      const href = target.getAttribute('href') || '';
+      const titleSlug = href.replace('#create-note-', '');
+      const title = titleSlug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+      
+      const newNote = createNote(currentNote?.id || null);
+      updateNote(newNote.id, { title });
+      
+      const updatedContent = content.replace(
+        new RegExp(`\\[\\[${title}\\]\\]`, 'gi'),
+        `[[${title}]]`
+      );
+      
+      setContent(updatedContent);
+      updateNote(currentNote?.id || '', { content: updatedContent });
+    }
+  };
+
+  const handleEditorKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.ctrlKey) {
+      switch (e.key) {
+        case 's':
+          e.preventDefault();
+          handleSave();
+          break;
+        case 'b':
+          e.preventDefault();
+          insertMarkdown('**{{text}}**');
+          break;
+        case 'i':
+          e.preventDefault();
+          insertMarkdown('*{{text}}*');
+          break;
+        case 'k':
+          e.preventDefault();
+          insertMarkdown('[{{text}}](url)');
+          break;
+      }
+    }
+    
+    if (e.key === '[' && textareaRef.current) {
+      const textarea = textareaRef.current;
+      const cursorPos = textarea.selectionStart;
+      const textBeforeCursor = content.substring(cursorPos - 1, cursorPos);
+      
+      if (textBeforeCursor === '[') {
+      }
+    }
+    
+    if (e.key === ']' && textareaRef.current) {
+      const textarea = textareaRef.current;
+      const cursorPos = textarea.selectionStart;
+      const textBeforeCursor = content.substring(0, cursorPos);
+      
+      const openBrackets = textBeforeCursor.match(/\[\[(?!\]\])/g);
+      const closeBrackets = textBeforeCursor.match(/\]\]/g);
+      
+      const openCount = openBrackets ? openBrackets.length : 0;
+      const closeCount = closeBrackets ? closeBrackets.length : 0;
+      
+      if (openCount > closeCount) {
+        e.preventDefault();
+        const newText = content.substring(0, cursorPos) + ']' + content.substring(cursorPos);
+        setContent(newText);
+        setIsSaved(false);
+        
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(cursorPos + 1, cursorPos + 1);
+        }, 0);
+      }
+    }
   };
 
   if (!currentNote) {
@@ -234,7 +317,6 @@ const MarkdownEditor: React.FC = () => {
           )}
         </div>
         
-        {/* Fixed the button layout here */}
         <div className="flex gap-1">
           <Win98Button 
             variant="icon" 
@@ -372,14 +454,20 @@ const MarkdownEditor: React.FC = () => {
             ref={textareaRef}
             value={content}
             onChange={handleContentChange}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => {
+              handleKeyDown(e);
+              handleEditorKeyDown(e);
+            }}
             className="win98-inset w-full h-full p-2 text-sm resize-none focus:outline-none"
-            placeholder="Write your note here... Markdown is supported!"
+            placeholder="Write your note here... Markdown is supported! Use [[double brackets]] to create wiki links."
           />
         )}
         
         {viewMode === 'preview' && (
-          <div className="p-4 win98-inset h-full overflow-auto">
+          <div 
+            className="p-4 win98-inset h-full overflow-auto" 
+            onClick={handleWikiLinkClick}
+          >
             {content ? (
               <ReactMarkdown className="prose prose-sm max-w-none">
                 {parseWikiLinks(content)}
@@ -396,11 +484,17 @@ const MarkdownEditor: React.FC = () => {
               ref={textareaRef}
               value={content}
               onChange={handleContentChange}
-              onKeyDown={handleKeyDown}
+              onKeyDown={(e) => {
+                handleKeyDown(e);
+                handleEditorKeyDown(e);
+              }}
               className="win98-inset w-1/2 h-full p-2 text-sm resize-none focus:outline-none border-r"
-              placeholder="Write your note here... Markdown is supported!"
+              placeholder="Write your note here... Markdown is supported! Use [[double brackets]] to create wiki links."
             />
-            <div className="p-4 win98-inset w-1/2 h-full overflow-auto">
+            <div 
+              className="p-4 win98-inset w-1/2 h-full overflow-auto"
+              onClick={handleWikiLinkClick}
+            >
               {content ? (
                 <ReactMarkdown className="prose prose-sm max-w-none">
                   {parseWikiLinks(content)}

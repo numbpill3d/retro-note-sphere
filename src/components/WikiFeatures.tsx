@@ -128,7 +128,8 @@ const WikiFeatures: React.FC<WikiFeaturesProps> = ({ noteId }) => {
                     variant="ghost"
                     className="text-xs text-left"
                     onClick={() => {
-                      const { setCurrentNote } = useNotes();
+                      // Fixed: Don't try to use a hook inside a callback
+                      // Instead, use the imported useNotes methods
                       setCurrentNote(link);
                     }}
                   >
