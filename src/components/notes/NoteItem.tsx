@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNotes, NoteType } from '../../context/NoteContext';
 import { 
   FolderOpen, Folder, File, Plus, Trash2,
-  Star, Copy, Pencil 
+  Star, Copy, Pencil, FolderPlus, FileText 
 } from 'lucide-react';
 import Win98Button from '../Win98Button';
 
@@ -24,7 +24,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
   favorites,
   toggleFavorite 
 }) => {
-  const { notes, currentNote, setCurrentNote, getNoteChildren, createNote, deleteNote, updateNote } = useNotes();
+  const { notes, currentNote, setCurrentNote, getNoteChildren, createNote, createFolder, deleteNote, updateNote } = useNotes();
   const children = getNoteChildren(note.id);
   const hasChildren = children.length > 0;
   const isExpanded = expandedFolders.has(note.id);
@@ -33,11 +33,25 @@ const NoteItem: React.FC<NoteItemProps> = ({
   const [showActions, setShowActions] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [newTitle, setNewTitle] = useState(note.title);
+  const [showAddOptions, setShowAddOptions] = useState(false);
 
   const handleCreateChild = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setShowAddOptions(true);
+  };
+  
+  const handleAddNote = (e: React.MouseEvent) => {
+    e.stopPropagation();
     createNote(note.id);
     toggleFolder(note.id);
+    setShowAddOptions(false);
+  };
+  
+  const handleAddFolder = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    createFolder(note.id);
+    toggleFolder(note.id);
+    setShowAddOptions(false);
   };
 
   const handleDeleteNote = (e: React.MouseEvent) => {
@@ -69,6 +83,14 @@ const NoteItem: React.FC<NoteItemProps> = ({
       tags: note.tags
     });
   };
+  
+  const handleItemClick = () => {
+    if (note.isFolder) {
+      toggleFolder(note.id);
+    } else {
+      setCurrentNote(note);
+    }
+  };
 
   return (
     <div>
@@ -78,23 +100,27 @@ const NoteItem: React.FC<NoteItemProps> = ({
           ${isSelected ? 'bg-win98-blue text-white' : 'hover:bg-win98-gray hover:bg-opacity-20'}
         `}
         style={{ paddingLeft: `${level * 16}px` }}
-        onClick={() => setCurrentNote(note)}
+        onClick={handleItemClick}
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => setShowActions(false)}
       >
         <div 
           className="mr-1 flex items-center"
           onClick={(e) => {
-            if (hasChildren) {
+            if (hasChildren || note.isFolder) {
               e.stopPropagation();
               toggleFolder(note.id);
             }
           }}
         >
-          {hasChildren ? (
+          {note.isFolder ? (
             isExpanded ? <FolderOpen size={16} /> : <Folder size={16} />
           ) : (
-            <File size={16} />
+            hasChildren ? (
+              isExpanded ? <FolderOpen size={16} /> : <Folder size={16} />
+            ) : (
+              <File size={16} />
+            )
           )}
         </div>
         
@@ -119,7 +145,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
         )}
         
         {showActions && !isRenaming && (
-          <div className="flex opacity-100 group-hover:opacity-100 absolute right-1 bg-inherit">
+          <div className="flex opacity-100 group-hover:opacity-100 absolute right-1 bg-inherit z-10">
             <Win98Button
               variant="icon"
               className="p-0.5"
@@ -137,13 +163,34 @@ const NoteItem: React.FC<NoteItemProps> = ({
               title="Rename note"
               icon={<Pencil size={14} />}
             />
-            <Win98Button
-              variant="icon"
-              className="p-0.5"
-              onClick={handleCreateChild}
-              title="Create child note"
-              icon={<Plus size={14} />}
-            />
+            <div className="relative">
+              <Win98Button
+                variant="icon"
+                className="p-0.5"
+                onClick={handleCreateChild}
+                title="Create child"
+                icon={<Plus size={14} />}
+              />
+              
+              {showAddOptions && (
+                <div className="absolute right-0 top-full mt-1 bg-white win98-window border border-win98-gray shadow-md z-20 w-32">
+                  <div 
+                    className="flex items-center p-2 hover:bg-win98-blue hover:text-white cursor-pointer"
+                    onClick={handleAddNote}
+                  >
+                    <FileText size={14} className="mr-2" />
+                    <span className="text-xs">New Note</span>
+                  </div>
+                  <div 
+                    className="flex items-center p-2 hover:bg-win98-blue hover:text-white cursor-pointer"
+                    onClick={handleAddFolder}
+                  >
+                    <FolderPlus size={14} className="mr-2" />
+                    <span className="text-xs">New Folder</span>
+                  </div>
+                </div>
+              )}
+            </div>
             <Win98Button
               variant="icon"
               className="p-0.5"
@@ -161,6 +208,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
           </div>
         )}
       </div>
+      
       {isExpanded && hasChildren && (
         <div>
           {children.map(child => (

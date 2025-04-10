@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNotes } from '../context/NoteContext';
-import { Search, ArrowUpDown, FileText, Plus } from 'lucide-react';
+import { Search, ArrowUpDown, FileText, Plus, FolderPlus } from 'lucide-react';
 import Win98Button from './Win98Button';
 import NoteItem from './notes/NoteItem';
 import FilterOptions from './notes/FilterOptions';
@@ -9,13 +9,14 @@ import SortOptions from './notes/SortOptions';
 import { SortOption, ViewOption } from './notes/types';
 
 const NoteTree: React.FC = () => {
-  const { notes, createNote, getNoteChildren } = useNotes();
+  const { notes, createNote, createFolder, getNoteChildren } = useNotes();
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('updated');
   const [viewMode, setViewMode] = useState<ViewOption>('all');
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [showCreateOptions, setShowCreateOptions] = useState(false);
   const [favorites, setFavorites] = useState<Set<string>>(() => {
     const saved = localStorage.getItem('note-favorites');
     return saved ? new Set(JSON.parse(saved)) : new Set<string>();
@@ -53,6 +54,12 @@ const NoteTree: React.FC = () => {
 
   const handleCreateRootNote = () => {
     createNote(null);
+    setShowCreateOptions(false);
+  };
+  
+  const handleCreateRootFolder = () => {
+    createFolder(null);
+    setShowCreateOptions(false);
   };
   
   const expandAll = () => {
@@ -94,14 +101,35 @@ const NoteTree: React.FC = () => {
     <div className="h-full flex flex-col">
       <div className="flex justify-between items-center p-2 border-b border-win98-gray">
         <h3 className="text-sm font-bold">Notes Explorer</h3>
-        <Win98Button 
-          size="sm" 
-          onClick={handleCreateRootNote}
-          title="Create new note"
-          icon={<Plus size={14} />}
-        >
-          New
-        </Win98Button>
+        <div className="relative">
+          <Win98Button 
+            size="sm" 
+            onClick={() => setShowCreateOptions(!showCreateOptions)}
+            title="Create new"
+            icon={<Plus size={14} />}
+          >
+            New
+          </Win98Button>
+          
+          {showCreateOptions && (
+            <div className="absolute right-0 top-full mt-1 bg-white win98-window border border-win98-gray shadow-md z-10 w-32">
+              <div 
+                className="flex items-center p-2 hover:bg-win98-blue hover:text-white cursor-pointer"
+                onClick={handleCreateRootNote}
+              >
+                <FileText size={14} className="mr-2" />
+                <span className="text-xs">New Note</span>
+              </div>
+              <div 
+                className="flex items-center p-2 hover:bg-win98-blue hover:text-white cursor-pointer"
+                onClick={handleCreateRootFolder}
+              >
+                <FolderPlus size={14} className="mr-2" />
+                <span className="text-xs">New Folder</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       
       <div className="p-2 border-b border-win98-gray">

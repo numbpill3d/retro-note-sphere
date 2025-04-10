@@ -19,6 +19,9 @@ const WikiFeatures: React.FC<WikiFeaturesProps> = ({ noteId }) => {
   
   if (!note) return null;
   
+  // Don't display wiki features for folders
+  if (note.isFolder) return null;
+  
   const wikiStatus = note.wikiStatus || 'stub';
   const contributors = note.contributors || ['User'];
   const version = note.version || 1;

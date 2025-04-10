@@ -16,12 +16,14 @@ export type NoteType = {
   contributors?: string[];
   version?: number;
   history?: { date: string; content: string; title: string }[];
+  isFolder?: boolean;
 };
 
 type NoteContextType = {
   notes: NoteType[];
   currentNote: NoteType | null;
   createNote: (parentId: string | null) => NoteType;
+  createFolder: (parentId: string | null) => NoteType;
   updateNote: (id: string, data: Partial<NoteType>) => void;
   deleteNote: (id: string) => void;
   setCurrentNote: (note: NoteType | null) => void;
@@ -114,12 +116,35 @@ export const NoteProvider: React.FC<{ children: React.ReactNode }> = ({ children
           content: '',
           title: 'Untitled Note'
         }
-      ]
+      ],
+      isFolder: false
     };
 
     setNotes((prevNotes) => [...prevNotes, newNote]);
     setCurrentNote(newNote);
     return newNote;
+  };
+  
+  // Create a new folder
+  const createFolder = (parentId: string | null) => {
+    const newFolder: NoteType = {
+      id: uuidv4(),
+      title: 'New Folder',
+      content: '',
+      parentId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      tags: [],
+      isFolder: true,
+      wikiStatus: 'complete',
+      contributors: ['User'],
+      version: 1
+    };
+    
+    setNotes((prevNotes) => [...prevNotes, newFolder]);
+    
+    // We don't set the folder as the current note since it's not editable content
+    return newFolder;
   };
 
   // Update a note
@@ -215,6 +240,7 @@ export const NoteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     notes,
     currentNote,
     createNote,
+    createFolder,
     updateNote,
     deleteNote,
     setCurrentNote,
