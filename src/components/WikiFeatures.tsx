@@ -122,7 +122,7 @@ const WikiFeatures: React.FC<WikiFeaturesProps> = ({ noteId }) => {
               {backlinks.map(link => (
                 <li key={link.id} className="hover:bg-win98-gray hover:bg-opacity-20 p-0.5">
                   <Win98Button
-                    variant="link"
+                    variant="ghost"
                     className="text-xs text-left"
                     onClick={() => {
                       const { setCurrentNote } = useNotes();
