@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNotes } from '../context/NoteContext';
 import Win98Button from './Win98Button';
@@ -10,7 +9,7 @@ interface WikiFeaturesProps {
 }
 
 const WikiFeatures: React.FC<WikiFeaturesProps> = ({ noteId }) => {
-  const { getNoteById, updateNote, getBacklinks } = useNotes();
+  const { getNoteById, updateNote, getBacklinks, setCurrentNote } = useNotes();
   const note = getNoteById(noteId);
   const backlinks = getBacklinks(noteId);
   const [showHistory, setShowHistory] = useState(false);
@@ -128,8 +127,6 @@ const WikiFeatures: React.FC<WikiFeaturesProps> = ({ noteId }) => {
                     variant="ghost"
                     className="text-xs text-left"
                     onClick={() => {
-                      // Fixed: Don't try to use a hook inside a callback
-                      // Instead, use the imported useNotes methods
                       setCurrentNote(link);
                     }}
                   >

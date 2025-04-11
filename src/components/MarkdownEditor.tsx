@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 const MarkdownEditor: React.FC = () => {
-  const { currentNote, updateNote, getNoteChildren } = useNotes();
+  const { currentNote, updateNote, getNoteChildren, createNote } = useNotes();
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -188,15 +188,13 @@ const MarkdownEditor: React.FC = () => {
   };
 
   const parseWikiLinks = (content: string) => {
-    const { notes, createNote } = useNotes();
-    
     let parsedContent = content;
     const wikiLinkRegex = /\[\[(.+?)\]\]/g;
     
     parsedContent = parsedContent.replace(wikiLinkRegex, (match, linkText) => {
-      const linkedNote = notes.find(note => 
+      const linkedNote = currentNote ? getNoteChildren(null).find(note => 
         note.title.toLowerCase() === linkText.toLowerCase()
-      );
+      ) : null;
       
       if (linkedNote) {
         return `[${linkText}](#${linkedNote.id})`;
