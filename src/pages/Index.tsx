@@ -8,6 +8,7 @@ import GraphView from '../components/GraphView';
 import Taskbar from '../components/Taskbar';
 import ThemeSelector from '../components/ThemeSelector';
 import Win98Button from '../components/Win98Button';
+import NoteSidebar from '../components/NoteSidebar';
 import { useTheme } from '../context/ThemeContext';
 import { LayoutGrid, LayoutList, Sparkles, Grip, Clock, Settings, HelpCircle, Search } from 'lucide-react';
 
@@ -47,14 +48,21 @@ const Index = () => {
               </Win98Window>
             )}
 
-            <Win98Window 
-              title="Note Editor" 
-              className="h-full"
-              minimizable={true}
-              maximizable={true}
-            >
-              <MarkdownEditor />
-            </Win98Window>
+            <div className="flex flex-col gap-3 h-full">
+              <Win98Window 
+                title="Note Editor" 
+                className="flex-1"
+                minimizable={true}
+                maximizable={true}
+              >
+                <div className="flex h-full">
+                  <NoteSidebar />
+                  <div className="flex-1 overflow-auto">
+                    <MarkdownEditor />
+                  </div>
+                </div>
+              </Win98Window>
+            </div>
           </div>
 
           {showGraph && (
@@ -77,7 +85,7 @@ const Index = () => {
               <div className="absolute inset-0 bg-black bg-opacity-30" onClick={() => setShowHelp(false)}></div>
               <Win98Window 
                 title="Help" 
-                className="w-[500px] h-[500px] z-40"
+                className="w-[450px] h-[450px] z-40"
                 onClose={() => setShowHelp(false)}
               >
                 <div className="h-full overflow-auto p-4">
@@ -108,6 +116,14 @@ const Index = () => {
                     <p><strong>Ctrl+B</strong>: Bold text</p>
                     <p><strong>Ctrl+I</strong>: Italic text</p>
                     <p><strong>Ctrl+K</strong>: Insert link</p>
+                  </div>
+                  
+                  <h3 className="font-bold mt-4 mb-2">Wiki Linking:</h3>
+                  <div className="win98-inset p-3 mb-4">
+                    <p>Use <strong>[[Page Name]]</strong> to create wiki links</p>
+                    <p>These links automatically create connections in the graph view</p>
+                    <p>Click on a wiki link to navigate directly to that page</p>
+                    <p>Create new pages instantly by linking to non-existent pages</p>
                   </div>
                   
                   <h3 className="font-bold mt-4 mb-2">Tips:</h3>
