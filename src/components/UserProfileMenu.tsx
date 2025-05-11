@@ -11,7 +11,7 @@ import Win98Button from './Win98Button';
 import { 
   UserRound, 
   Settings, 
-  Plugin, 
+  Puzzle, 
   Link, 
   User, 
   UserCog,
@@ -53,7 +53,7 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ isOpen, onClose }) =>
                 value="plugins" 
                 className="w-full justify-start gap-2 px-3 data-[state=active]:bg-win98-blue data-[state=active]:text-white"
               >
-                <Plugin size={16} />
+                <Puzzle size={16} />
                 <span>Plugin Marketplace</span>
               </TabsTrigger>
               <TabsTrigger 
