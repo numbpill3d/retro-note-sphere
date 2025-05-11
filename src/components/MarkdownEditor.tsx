@@ -72,6 +72,16 @@ const MarkdownEditor: React.FC = () => {
       setViewMode('edit');
     }
   };
+  
+  const handlePreviewClick = () => {
+    if (!editMode) {
+      setEditMode(true);
+      setViewMode('edit');
+      setTimeout(() => {
+        textareaRef.current?.focus();
+      }, 0);
+    }
+  };
 
   const handleToolbarAction = (action: string, template?: string) => {
     if (action === 'format' && template) {
@@ -209,26 +219,30 @@ const MarkdownEditor: React.FC = () => {
   const handleWikiLinkClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     
-    if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#create-note-')) {
-      e.preventDefault();
+    if (target.tagName === 'A') {
+      e.stopPropagation();
       
-      const href = target.getAttribute('href') || '';
-      const titleSlug = href.replace('#create-note-', '');
-      const title = titleSlug
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-      
-      const newNote = createNote(currentNote?.id || null);
-      updateNote(newNote.id, { title });
-      
-      const updatedContent = content.replace(
-        new RegExp(`\\[\\[${title}\\]\\]`, 'gi'),
-        `[[${title}]]`
-      );
-      
-      setContent(updatedContent);
-      updateNote(currentNote?.id || '', { content: updatedContent });
+      if (target.getAttribute('href')?.startsWith('#create-note-')) {
+        e.preventDefault();
+        
+        const href = target.getAttribute('href') || '';
+        const titleSlug = href.replace('#create-note-', '');
+        const title = titleSlug
+          .split('-')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        
+        const newNote = createNote(currentNote?.id || null);
+        updateNote(newNote.id, { title });
+        
+        const updatedContent = content.replace(
+          new RegExp(`\\[\\[${title}\\]\\]`, 'gi'),
+          `[[${title}]]`
+        );
+        
+        setContent(updatedContent);
+        updateNote(currentNote?.id || '', { content: updatedContent });
+      }
     }
   };
 
@@ -320,7 +334,7 @@ const MarkdownEditor: React.FC = () => {
             variant="icon" 
             size="sm"
             onClick={() => setShowWikiFeatures(!showWikiFeatures)}
-            tooltip="Wiki Tools"
+            title="Wiki Tools"
             icon={<BookOpen size={14} />}
           />
           
@@ -329,7 +343,7 @@ const MarkdownEditor: React.FC = () => {
               size="sm" 
               icon={<Save size={14} />}
               onClick={handleSave}
-              tooltip="Save note"
+              title="Save note"
             >
               Save
             </Win98Button>
@@ -339,7 +353,7 @@ const MarkdownEditor: React.FC = () => {
             onClick={toggleEditMode} 
             size="sm" 
             icon={editMode ? <Eye size={14} /> : <Edit size={14} />}
-            tooltip={editMode ? "Preview" : "Edit"}
+            title={editMode ? "Preview" : "Edit"}
           >
             {editMode ? 'Preview' : 'Edit'}
           </Win98Button>
@@ -348,7 +362,7 @@ const MarkdownEditor: React.FC = () => {
             size="sm" 
             icon={<MoreHorizontal size={14} />}
             onClick={() => setShowOptions(!showOptions)}
-            tooltip="More options"
+            title="More options"
           />
         </div>
       </div>
@@ -463,16 +477,18 @@ const MarkdownEditor: React.FC = () => {
         
         {viewMode === 'preview' && (
           <div 
-            className="p-4 win98-inset h-full overflow-auto" 
-            onClick={handleWikiLinkClick}
+            className="p-4 win98-inset h-full overflow-auto cursor-text" 
+            onClick={handlePreviewClick}
           >
-            {content ? (
-              <ReactMarkdown className="prose prose-sm max-w-none">
-                {parseWikiLinks(content)}
-              </ReactMarkdown>
-            ) : (
-              <p className="text-gray-500">No content. Click Edit to start writing.</p>
-            )}
+            <div onClick={handleWikiLinkClick}>
+              {content ? (
+                <ReactMarkdown className="prose prose-sm max-w-none">
+                  {parseWikiLinks(content)}
+                </ReactMarkdown>
+              ) : (
+                <p className="text-gray-500">No content. Click to start editing.</p>
+              )}
+            </div>
           </div>
         )}
         

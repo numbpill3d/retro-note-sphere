@@ -9,8 +9,19 @@ import Taskbar from '../components/Taskbar';
 import ThemeSelector from '../components/ThemeSelector';
 import Win98Button from '../components/Win98Button';
 import NoteSidebar from '../components/NoteSidebar';
+import UserProfileMenu from '../components/UserProfileMenu';
 import { useTheme } from '../context/ThemeContext';
-import { LayoutGrid, LayoutList, Sparkles, Grip, Clock, Settings, HelpCircle, Search } from 'lucide-react';
+import { 
+  LayoutGrid, 
+  LayoutList, 
+  Sparkles, 
+  Grip, 
+  Clock, 
+  Settings, 
+  HelpCircle, 
+  Search, 
+  UserRound 
+} from 'lucide-react';
 
 const Index = () => {
   const [showHelp, setShowHelp] = useState(false);
@@ -18,6 +29,7 @@ const Index = () => {
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
   const [layoutMode, setLayoutMode] = useState<'default' | 'wide' | 'focus'>('default');
   const { theme } = useTheme();
 
@@ -146,6 +158,11 @@ const Index = () => {
             onClose={() => setShowThemeSelector(false)} 
           />
           
+          <UserProfileMenu
+            isOpen={showUserProfile}
+            onClose={() => setShowUserProfile(false)}
+          />
+          
           {showSearch && (
             <div className="fixed inset-0 z-30 flex items-center justify-center">
               <div className="absolute inset-0 bg-black bg-opacity-30" onClick={() => setShowSearch(false)}></div>
@@ -173,6 +190,14 @@ const Index = () => {
         </div>
         
         <div className="fixed top-4 right-4 z-20 flex gap-2">
+          <Win98Button 
+            variant="icon" 
+            title="User Profile"
+            onClick={() => setShowUserProfile(!showUserProfile)}
+          >
+            <UserRound size={16} />
+          </Win98Button>
+          
           <Win98Button 
             variant="icon" 
             title="Toggle layout"
