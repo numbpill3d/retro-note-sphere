@@ -79,6 +79,7 @@ This is your first note. You can edit it or create a new one.
 - Hierarchical organization
 - Retro Windows 98 style
 - Wiki-like features
+- **New**: Advanced backlinking system
 
 ## Text Formatting Shortcuts
 
@@ -87,6 +88,30 @@ This is your first note. You can edit it or create a new one.
 | **Ctrl+B** | **Bold Text** |
 | **Ctrl+I** | *Italic Text* |
 | **Ctrl+K** | [Create Link](https://example.com) |
+
+## Advanced Backlinking System
+
+RetroNotes features a unique backlinking language using special syntax:
+
+### Basic Links
+- \`[[Note Title]]\` - Standard wiki links
+- \`(-::- Note Title -::-)\` - Priority link (high importance)
+- \`[Note Title]\` - Quick reference link
+- \`-x- Note Title -x-\` - Cross-reference link
+
+### Special Markers
+- \`+ Note Title\` - Additive relationship (builds on)
+- \`= Note Title\` - Equivalent concept
+- \`/ Note Title /\` - Alternate perspective
+- \`// Note Title //\` - Commentary or annotation
+
+### Examples:
+\`\`\`
+This note connects to [[Basic Concepts]] and builds on + Advanced Topics.
+For alternative views, see / Different Approach /.
+Cross-referenced with -x- Related Research -x-.
+Priority connection: (-::- Critical Information -::-)
+\`\`\`
 
 ## Wiki Linking
 
@@ -109,7 +134,19 @@ To create internal links between notes:
 - Add tags with #hashtags in your note content
 - Tags are automatically extracted and can be used for filtering
 
-Enjoy taking notes!`,
+Enjoy taking notes!
+
+---
+
+### Credits
+
+**RetroNotes** - Created by **voidrane** & **numbpilled**
+
+🌐 [numbpilled.neocities.org](https://numbpilled.neocities.org)  
+☕ [ko-fi.com/numbpilled](https://ko-fi.com/numbpilled)  
+🕸️ [voidrane.nekoweb.org](https://voidrane.nekoweb.org)
+
+*With love from the retro computing community* ❤️`,
         parentId: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -273,16 +310,42 @@ Enjoy taking notes!`,
     return notes.filter(note => {
       if (note.id === noteId) return false;
       
-      // Match both [[Note Name]] wiki links and direct #noteId references
+      // Enhanced regex patterns for advanced backlinking
       const wikiLinkRegex = new RegExp(`\\[\\[(.*?)\\]\\]`, 'g');
+      const priorityLinkRegex = new RegExp(`\\(-::-\\s*(.*?)\\s*-::-\\)`, 'g');
+      const quickRefRegex = new RegExp(`\\[(.*?)\\](?!\\()`, 'g');
+      const crossRefRegex = new RegExp(`-x-\\s*(.*?)\\s*-x-`, 'g');
+      const additiveRegex = new RegExp(`\\+\\s+([^\\n]+)`, 'g');
+      const equivalentRegex = new RegExp(`=\\s+([^\\n]+)`, 'g');
+      const alternateRegex = new RegExp(`/\\s*(.*?)\\s*/`, 'g');
+      const commentaryRegex = new RegExp(`//\\s*(.*?)\\s*//`, 'g');
       const directLinkRegex = new RegExp(`#${noteId}`, 'g');
       
-      // Extract all wiki links
+      // Extract all types of links
       const wikiLinks = [...note.content.matchAll(wikiLinkRegex)].map(match => match[1]);
+      const priorityLinks = [...note.content.matchAll(priorityLinkRegex)].map(match => match[1]);
+      const quickRefs = [...note.content.matchAll(quickRefRegex)].map(match => match[1]);
+      const crossRefs = [...note.content.matchAll(crossRefRegex)].map(match => match[1]);
+      const additiveLinks = [...note.content.matchAll(additiveRegex)].map(match => match[1]);
+      const equivalentLinks = [...note.content.matchAll(equivalentRegex)].map(match => match[1]);
+      const alternateLinks = [...note.content.matchAll(alternateRegex)].map(match => match[1]);
+      const commentaryLinks = [...note.content.matchAll(commentaryRegex)].map(match => match[1]);
       
-      // Check if any wiki link matches the title of the target note
+      // Combine all link types
+      const allLinks = [
+        ...wikiLinks,
+        ...priorityLinks,
+        ...quickRefs,
+        ...crossRefs,
+        ...additiveLinks,
+        ...equivalentLinks,
+        ...alternateLinks,
+        ...commentaryLinks
+      ];
+      
+      // Check if any link matches the title of the target note
       const targetNote = notes.find(n => n.id === noteId);
-      if (targetNote && wikiLinks.some(link => link.toLowerCase() === targetNote.title.toLowerCase())) {
+      if (targetNote && allLinks.some(link => link.toLowerCase().trim() === targetNote.title.toLowerCase())) {
         return true;
       }
       
