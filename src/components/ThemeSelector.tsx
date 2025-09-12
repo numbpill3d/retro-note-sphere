@@ -29,22 +29,239 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const themes = [
-    { id: 'win98', name: 'Windows 98', icon: <Monitor size={16} />, description: 'Classic Windows 98 look and feel' },
-    { id: 'cyber', name: 'Cyberpunk', icon: <Zap size={16} />, description: 'High-tech, neon-styled interface' },
-    { id: 'terminal', name: 'Terminal', icon: <Terminal size={16} />, description: 'Minimalist command-line aesthetic' },
-    { id: 'y2k', name: 'Y2K', icon: <Sparkles size={16} />, description: 'Late 90s/early 2000s web design' },
-    { id: 'hacker', name: 'Hacker', icon: <FileCode size={16} />, description: 'Matrix-inspired green-on-black' },
-    { id: 'coffee', name: 'Coffee Shop', icon: <Coffee size={16} />, description: 'Warm, cozy brown tones' },
-    { id: 'retro', name: 'Retro Art', icon: <Palette size={16} />, description: 'Vibrant retro art style' },
-    { id: 'minimal', name: 'Minimal', icon: <Brush size={16} />, description: 'Clean, distraction-free interface' },
-    { id: 'vaporwave', name: 'Vaporwave', icon: <Sunset size={16} />, description: '80s retro-futurism with pink/blue aesthetics' },
-    { id: 'forest', name: 'Forest', icon: <Mountain size={16} />, description: 'Calming natural green tones' },
-    { id: 'midnight', name: 'Midnight', icon: <Moon size={16} />, description: 'Dark blue night-time theme' },
-    { id: 'bubblegum', name: 'Bubblegum', icon: <Droplets size={16} />, description: 'Fun, pastel pink and blue' },
-    { id: 'papyrus', name: 'Papyrus', icon: <Scroll size={16} />, description: 'Elegant beige parchment-like style' },
-    { id: 'sunshine', name: 'Sunshine', icon: <Sun size={16} />, description: 'Bright, cheerful yellow theme' },
-    { id: 'ocean', name: 'Ocean', icon: <Waves size={16} />, description: 'Deep blue and teal water theme' },
-    { id: 'starlight', name: 'Starlight', icon: <Star size={16} />, description: 'Dark theme with star-like accents' },
+    { 
+      id: 'win98', 
+      name: 'Windows 98', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <rect x="2" y="2" width="12" height="10" rx="1" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <rect x="3" y="4" width="10" height="1" fill="currentColor"/>
+          <rect x="4" y="6" width="2" height="2" fill="currentColor"/>
+          <rect x="7" y="6" width="2" height="2" fill="currentColor"/>
+          <rect x="10" y="6" width="2" height="2" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Classic Windows 98 look and feel' 
+    },
+    { 
+      id: 'cyber', 
+      name: 'Cyberpunk', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 2L12 6H10V10H12L8 14L4 10H6V6H4L8 2Z" fill="currentColor"/>
+          <circle cx="3" cy="3" r="1" fill="currentColor"/>
+          <circle cx="13" cy="3" r="1" fill="currentColor"/>
+          <circle cx="3" cy="13" r="1" fill="currentColor"/>
+          <circle cx="13" cy="13" r="1" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Purple cyberpunk interface with neon accents' 
+    },
+    { 
+      id: 'terminal', 
+      name: 'Terminal', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <rect x="1" y="2" width="14" height="12" rx="1" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <path d="M3 5L6 7L3 9" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <rect x="7" y="8" width="4" height="1" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Classic green terminal aesthetic' 
+    },
+    { 
+      id: 'y2k', 
+      name: 'Y2K', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <circle cx="6" cy="6" r="1" fill="currentColor"/>
+          <circle cx="10" cy="6" r="1" fill="currentColor"/>
+          <circle cx="8" cy="10" r="1" fill="currentColor"/>
+          <path d="M5 12C6 13 10 13 11 12" stroke="currentColor" strokeWidth="1" fill="none"/>
+        </svg>
+      ), 
+      description: 'Late 90s/early 2000s web design' 
+    },
+    { 
+      id: 'hacker', 
+      name: 'Hacker', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <rect x="1" y="3" width="14" height="10" rx="1" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <rect x="3" y="5" width="1" height="6" fill="currentColor"/>
+          <rect x="5" y="6" width="1" height="5" fill="currentColor"/>
+          <rect x="7" y="5" width="1" height="6" fill="currentColor"/>
+          <rect x="9" y="7" width="1" height="4" fill="currentColor"/>
+          <rect x="11" y="5" width="1" height="6" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Matrix-inspired digital rain theme' 
+    },
+    { 
+      id: 'coffee', 
+      name: 'Coffee Shop', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M3 4H11C12 4 13 5 13 6V9C13 10 12 11 11 11H3V4Z" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <path d="M13 6H14C14.5 6 15 6.5 15 7V8C15 8.5 14.5 9 14 9H13" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <rect x="3" y="11" width="8" height="2" fill="currentColor"/>
+          <path d="M5 2C5 2.5 5.5 3 6 3C6.5 3 7 2.5 7 2" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <path d="M7 2C7 2.5 7.5 3 8 3C8.5 3 9 2.5 9 2" stroke="currentColor" strokeWidth="1" fill="none"/>
+        </svg>
+      ), 
+      description: 'Warm, cozy brown tones' 
+    },
+    { 
+      id: 'retro', 
+      name: 'Retro Art', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <rect x="2" y="3" width="12" height="8" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <rect x="4" y="5" width="2" height="2" fill="currentColor"/>
+          <rect x="7" y="5" width="2" height="2" fill="currentColor"/>
+          <rect x="10" y="5" width="2" height="2" fill="currentColor"/>
+          <rect x="5" y="8" width="6" height="1" fill="currentColor"/>
+          <circle cx="8" cy="13" r="1" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Vibrant retro art style' 
+    },
+    { 
+      id: 'minimal', 
+      name: 'Minimal', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="8" r="2" fill="currentColor"/>
+          <rect x="7" y="2" width="2" height="4" fill="currentColor"/>
+          <rect x="7" y="10" width="2" height="4" fill="currentColor"/>
+          <rect x="2" y="7" width="4" height="2" fill="currentColor"/>
+          <rect x="10" y="7" width="4" height="2" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Clean, distraction-free interface' 
+    },
+    { 
+      id: 'vaporwave', 
+      name: 'Vaporwave', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="4" r="2" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <path d="M2 8H14" stroke="currentColor" strokeWidth="1"/>
+          <path d="M3 10H13" stroke="currentColor" strokeWidth="1"/>
+          <path d="M4 12H12" stroke="currentColor" strokeWidth="1"/>
+          <path d="M5 14H11" stroke="currentColor" strokeWidth="1"/>
+        </svg>
+      ), 
+      description: '80s retro-futurism with pink/blue aesthetics' 
+    },
+    { 
+      id: 'forest', 
+      name: 'Forest', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 2L6 6H10L8 2Z" fill="currentColor"/>
+          <path d="M8 4L5 9H11L8 4Z" fill="currentColor"/>
+          <rect x="7" y="9" width="2" height="5" fill="currentColor"/>
+          <circle cx="4" cy="12" r="1" fill="currentColor"/>
+          <circle cx="12" cy="11" r="1" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Calming natural green tones' 
+    },
+    { 
+      id: 'midnight', 
+      name: 'Midnight', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <path d="M8 8L10 6" stroke="currentColor" strokeWidth="1"/>
+          <path d="M8 8L8 4" stroke="currentColor" strokeWidth="1"/>
+          <circle cx="3" cy="3" r="0.5" fill="currentColor"/>
+          <circle cx="13" cy="4" r="0.5" fill="currentColor"/>
+          <circle cx="12" cy="12" r="0.5" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Dark blue night-time theme' 
+    },
+    { 
+      id: 'bubblegum', 
+      name: 'Bubblegum', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="6" cy="6" r="3" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <circle cx="10" cy="8" r="2" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <circle cx="4" cy="10" r="1.5" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <circle cx="12" cy="4" r="1" fill="currentColor"/>
+          <circle cx="3" cy="13" r="1" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Fun, pastel pink and blue' 
+    },
+    { 
+      id: 'papyrus', 
+      name: 'Papyrus', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <rect x="3" y="2" width="10" height="12" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <path d="M5 5H11" stroke="currentColor" strokeWidth="1"/>
+          <path d="M5 7H11" stroke="currentColor" strokeWidth="1"/>
+          <path d="M5 9H9" stroke="currentColor" strokeWidth="1"/>
+          <path d="M5 11H10" stroke="currentColor" strokeWidth="1"/>
+          <circle cx="1" cy="1" r="0.5" fill="currentColor"/>
+          <circle cx="15" cy="15" r="0.5" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Elegant beige parchment-like style' 
+    },
+    { 
+      id: 'sunshine', 
+      name: 'Sunshine', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="8" r="3" fill="currentColor"/>
+          <rect x="7.5" y="1" width="1" height="2" fill="currentColor"/>
+          <rect x="7.5" y="13" width="1" height="2" fill="currentColor"/>
+          <rect x="1" y="7.5" width="2" height="1" fill="currentColor"/>
+          <rect x="13" y="7.5" width="2" height="1" fill="currentColor"/>
+          <rect x="3.5" y="3.5" width="1" height="1" fill="currentColor" transform="rotate(45 4 4)"/>
+          <rect x="11.5" y="11.5" width="1" height="1" fill="currentColor" transform="rotate(45 12 12)"/>
+          <rect x="3.5" y="11.5" width="1" height="1" fill="currentColor" transform="rotate(-45 4 12)"/>
+          <rect x="11.5" y="3.5" width="1" height="1" fill="currentColor" transform="rotate(-45 12 4)"/>
+        </svg>
+      ), 
+      description: 'Bright, cheerful yellow theme' 
+    },
+    { 
+      id: 'ocean', 
+      name: 'Ocean', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M1 8C3 6 5 10 7 8C9 6 11 10 13 8C15 6 15 6 15 8V14H1V8Z" fill="currentColor"/>
+          <path d="M2 6C4 4 6 8 8 6C10 4 12 8 14 6" stroke="currentColor" strokeWidth="1" fill="none"/>
+          <circle cx="3" cy="3" r="1" fill="currentColor"/>
+          <circle cx="13" cy="2" r="0.5" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Deep blue and teal water theme' 
+    },
+    { 
+      id: 'starlight', 
+      name: 'Starlight', 
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <rect x="1" y="1" width="14" height="14" fill="currentColor" fillOpacity="0.1"/>
+          <path d="M8 2L9 6L8 7L7 6L8 2Z" fill="currentColor"/>
+          <circle cx="3" cy="4" r="0.5" fill="currentColor"/>
+          <circle cx="12" cy="3" r="0.5" fill="currentColor"/>
+          <circle cx="4" cy="9" r="0.5" fill="currentColor"/>
+          <circle cx="11" cy="11" r="0.5" fill="currentColor"/>
+          <circle cx="13" cy="8" r="0.5" fill="currentColor"/>
+          <circle cx="6" cy="12" r="0.5" fill="currentColor"/>
+        </svg>
+      ), 
+      description: 'Dark theme with star-like accents' 
+    },
   ];
 
   return (

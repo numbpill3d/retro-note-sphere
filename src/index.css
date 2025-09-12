@@ -100,33 +100,33 @@
   }
 
   [data-theme="cyber"] {
-    --theme-bg: linear-gradient(180deg, #000000 0%, #0B0B2B 50%, #000000 100%);
+    --theme-bg: linear-gradient(180deg, #0d001a 0%, #1a0033 50%, #330066 100%);
     --theme-font: 'Courier New', monospace;
-    --theme-button-bg: #1a1a40;
-    --theme-button-border: #00ffaa;
-    --theme-button-border-shadow: #00ffaa;
-    --theme-highlight: #00ffaa;
-    --theme-titlebar: #1a1a40;
-    --theme-titlebar-text: #00ffaa;
-    --theme-window-bg: #0B0B2B;
-    --theme-text: #00ffaa;
-    --theme-window-border: #00ffaa;
-    --theme-window-border-shadow: #00ffaa;
+    --theme-button-bg: #1a0033;
+    --theme-button-border: #9966ff;
+    --theme-button-border-shadow: #4d1a80;
+    --theme-highlight: #000000;
+    --theme-titlebar: #330066;
+    --theme-titlebar-text: #ffffff;
+    --theme-window-bg: #0d001a;
+    --theme-text: #9966ff;
+    --theme-window-border: #9966ff;
+    --theme-window-border-shadow: #4d1a80;
   }
 
   [data-theme="terminal"] {
     --theme-bg: #000000;
     --theme-font: 'VT323', monospace;
-    --theme-button-bg: #000000;
+    --theme-button-bg: #001100;
     --theme-button-border: #33ff00;
-    --theme-button-border-shadow: #33ff00;
-    --theme-highlight: #33ff00;
-    --theme-titlebar: #000000;
+    --theme-button-border-shadow: #008800;
+    --theme-highlight: #000000;
+    --theme-titlebar: #001100;
     --theme-titlebar-text: #33ff00;
     --theme-window-bg: #000000;
     --theme-text: #33ff00;
     --theme-window-border: #33ff00;
-    --theme-window-border-shadow: #33ff00;
+    --theme-window-border-shadow: #008800;
   }
   
   [data-theme="y2k"] {
@@ -145,17 +145,17 @@
   }
 
   [data-theme="hacker"] {
-    --theme-bg: #000000;
+    --theme-bg: linear-gradient(45deg, #000000 0%, #001a00 50%, #003300 100%);
     --theme-font: 'Courier New', monospace;
-    --theme-button-bg: #000000;
-    --theme-button-border: #00ff00;
+    --theme-button-bg: #003300;
+    --theme-button-border: #00ff41;
     --theme-button-border-shadow: #006600;
-    --theme-highlight: #00ff00;
-    --theme-titlebar: #000000;
-    --theme-titlebar-text: #00ff00;
-    --theme-window-bg: #000000;
-    --theme-text: #00ff00;
-    --theme-window-border: #00ff00;
+    --theme-highlight: #000000;
+    --theme-titlebar: #003300;
+    --theme-titlebar-text: #00ff41;
+    --theme-window-bg: #001a00;
+    --theme-text: #00ff41;
+    --theme-window-border: #00ff41;
     --theme-window-border-shadow: #006600;
   }
   
