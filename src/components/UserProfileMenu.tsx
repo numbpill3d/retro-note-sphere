@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Dialog,
   DialogContent,
@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import Win98Button from './Win98Button';
 import { 
   UserRound, 
@@ -16,7 +17,10 @@ import {
   User, 
   UserCog,
   ExternalLink,
-  LayoutList
+  LayoutList,
+  Edit3,
+  Save,
+  X
 } from 'lucide-react';
 
 interface UserProfileMenuProps {
@@ -25,11 +29,36 @@ interface UserProfileMenuProps {
 }
 
 const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ isOpen, onClose }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    name: 'RetroNotes User',
+    email: 'user@example.com'
+  });
+  const [editUserInfo, setEditUserInfo] = useState(userInfo);
+
+  const handleEditProfile = () => {
+    setEditUserInfo(userInfo);
+    setIsEditing(true);
+  };
+
+  const handleSaveProfile = () => {
+    setUserInfo(editUserInfo);
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditUserInfo(userInfo);
+    setIsEditing(false);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[500px] p-0 gap-0 win98-window">
-        <DialogHeader className="bg-win98-silver border-b border-win98-gray p-2">
-          <DialogTitle className="text-sm font-bold">User Profile</DialogTitle>
+      <DialogContent className="sm:max-w-[500px] p-0 gap-0 win98-window border-2 border-win98-dark-gray shadow-lg">
+        <DialogHeader className="bg-gradient-to-r from-win98-blue to-win98-dark-blue border-b-2 border-win98-dark-gray p-3 win98-inset-reverse">
+          <DialogTitle className="text-sm font-bold text-white flex items-center gap-2">
+            <UserCog size={16} />
+            User Profile
+          </DialogTitle>
         </DialogHeader>
         
         <Tabs defaultValue="profile" className="w-full">
@@ -72,15 +101,56 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ isOpen, onClose }) =>
               </TabsTrigger>
             </TabsList>
             
-            <div className="flex-1 p-4 win98-window overflow-auto">
+            <div className="flex-1 p-4 win98-inset-deep overflow-auto border-l border-win98-gray">
               <TabsContent value="profile" className="h-full">
-                <div className="flex flex-col items-center justify-center h-full space-y-4">
-                  <div className="win98-window p-6 rounded-full">
-                    <UserRound size={48} />
+                <div className="flex flex-col items-center justify-center h-full space-y-6">
+                  <div className="win98-window p-8 rounded-full border-2 border-win98-dark-gray bg-gradient-to-br from-win98-silver to-win98-light-gray">
+                    <UserRound size={64} className="text-win98-dark-gray" />
                   </div>
-                  <h3 className="text-lg font-bold">RetroNotes User</h3>
-                  <p className="text-sm">user@example.com</p>
-                  <Win98Button>Edit Profile</Win98Button>
+                  
+                  {!isEditing ? (
+                    <>
+                      <div className="text-center space-y-2">
+                        <h3 className="text-xl font-bold text-win98-text">{userInfo.name}</h3>
+                        <p className="text-sm text-win98-text-secondary win98-inset px-3 py-1 rounded">{userInfo.email}</p>
+                      </div>
+                      <Win98Button onClick={handleEditProfile} className="flex items-center gap-2">
+                        <Edit3 size={14} />
+                        Edit Profile
+                      </Win98Button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-full max-w-xs space-y-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-bold text-win98-text">Name:</label>
+                          <Input
+                            value={editUserInfo.name}
+                            onChange={(e) => setEditUserInfo({...editUserInfo, name: e.target.value})}
+                            className="win98-inset-deep"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-bold text-win98-text">Email:</label>
+                          <Input
+                            value={editUserInfo.email}
+                            onChange={(e) => setEditUserInfo({...editUserInfo, email: e.target.value})}
+                            className="win98-inset-deep"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <Win98Button onClick={handleSaveProfile} className="flex items-center gap-2">
+                          <Save size={14} />
+                          Save
+                        </Win98Button>
+                        <Win98Button onClick={handleCancelEdit} variant="ghost" className="flex items-center gap-2">
+                          <X size={14} />
+                          Cancel
+                        </Win98Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </TabsContent>
               
