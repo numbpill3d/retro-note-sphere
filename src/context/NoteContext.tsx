@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WikiPageStatus } from '../components/notes/types';
+import { extractNoteReferences } from '../lib/note-links';
 
 // Types
 export type NoteType = {
@@ -307,50 +308,17 @@ Enjoy taking notes!
 
   // Get all notes that link to the given noteId
   const getBacklinks = (noteId: string) => {
-    return notes.filter(note => {
+    const targetNote = notes.find((note) => note.id === noteId);
+    if (!targetNote) return [];
+    const normalizedTitle = targetNote.title.toLowerCase().trim();
+
+    return notes.filter((note) => {
       if (note.id === noteId) return false;
-      
-      // Enhanced regex patterns for advanced backlinking
-      const wikiLinkRegex = new RegExp(`\\[\\[(.*?)\\]\\]`, 'g');
-      const priorityLinkRegex = new RegExp(`\\(-::-\\s*(.*?)\\s*-::-\\)`, 'g');
-      const quickRefRegex = new RegExp(`\\[(.*?)\\](?!\\()`, 'g');
-      const crossRefRegex = new RegExp(`-x-\\s*(.*?)\\s*-x-`, 'g');
-      const additiveRegex = new RegExp(`\\+\\s+([^\\n]+)`, 'g');
-      const equivalentRegex = new RegExp(`=\\s+([^\\n]+)`, 'g');
-      const alternateRegex = new RegExp(`/\\s*(.*?)\\s*/`, 'g');
-      const commentaryRegex = new RegExp(`//\\s*(.*?)\\s*//`, 'g');
-      const directLinkRegex = new RegExp(`#${noteId}`, 'g');
-      
-      // Extract all types of links
-      const wikiLinks = [...note.content.matchAll(wikiLinkRegex)].map(match => match[1]);
-      const priorityLinks = [...note.content.matchAll(priorityLinkRegex)].map(match => match[1]);
-      const quickRefs = [...note.content.matchAll(quickRefRegex)].map(match => match[1]);
-      const crossRefs = [...note.content.matchAll(crossRefRegex)].map(match => match[1]);
-      const additiveLinks = [...note.content.matchAll(additiveRegex)].map(match => match[1]);
-      const equivalentLinks = [...note.content.matchAll(equivalentRegex)].map(match => match[1]);
-      const alternateLinks = [...note.content.matchAll(alternateRegex)].map(match => match[1]);
-      const commentaryLinks = [...note.content.matchAll(commentaryRegex)].map(match => match[1]);
-      
-      // Combine all link types
-      const allLinks = [
-        ...wikiLinks,
-        ...priorityLinks,
-        ...quickRefs,
-        ...crossRefs,
-        ...additiveLinks,
-        ...equivalentLinks,
-        ...alternateLinks,
-        ...commentaryLinks
-      ];
-      
-      // Check if any link matches the title of the target note
-      const targetNote = notes.find(n => n.id === noteId);
-      if (targetNote && allLinks.some(link => link.toLowerCase().trim() === targetNote.title.toLowerCase())) {
-        return true;
-      }
-      
-      // Check for direct links
-      return directLinkRegex.test(note.content);
+      const references = extractNoteReferences(note.content);
+      return (
+        references.ids.includes(noteId) ||
+        references.titles.some((title) => title.toLowerCase().trim() === normalizedTitle)
+      );
     });
   };
 

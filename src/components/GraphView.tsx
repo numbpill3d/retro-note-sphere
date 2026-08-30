@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 import Win98Button from './Win98Button';
 import { ZoomIn, ZoomOut, MousePointer, Move, Maximize2, X, RefreshCw } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { extractNoteReferences } from '../lib/note-links';
 
 const GraphView: React.FC = () => {
   const { notes, currentNote, setCurrentNote } = useNotes();
@@ -75,10 +76,12 @@ const GraphView: React.FC = () => {
 
     // Build graph data structure
     const buildGraphData = () => {
-      // Create node-to-index mapping for quick lookup
+      // Create lookup maps for direct IDs and title-based wiki/relationship links.
       const nodeMap = new Map<string, number>();
+      const noteIdByTitle = new Map<string, string>();
       notes.forEach((note, index) => {
         nodeMap.set(note.id, index);
+        noteIdByTitle.set(note.title.toLowerCase().trim(), note.id);
       });
 
       // Create nodes data
@@ -99,23 +102,29 @@ const GraphView: React.FC = () => {
           type: 'parent-child'
         }));
 
-      // Create links for referenced notes (parsing markdown links)
+      // Create links for stored Markdown IDs, wiki links, and relationship markers.
       const contentLinks: { source: string; target: string; type: string }[] = [];
-      notes.forEach(note => {
-        const linkRegex = /\[.*?\]\(#(.*?)\)/g;
-        let match;
-        const content = note.content || '';
-        
-        while ((match = linkRegex.exec(content)) !== null) {
-          const targetId = match[1];
-          if (nodeMap.has(targetId)) {
-            contentLinks.push({
-              source: note.id,
-              target: targetId,
-              type: 'reference'
-            });
-          }
-        }
+      const seenLinks = new Set<string>();
+      notes.forEach((note) => {
+        const references = extractNoteReferences(note.content || '');
+        const targetIds = [
+          ...references.ids.filter((id) => nodeMap.has(id)),
+          ...references.titles
+            .map((title) => noteIdByTitle.get(title.toLowerCase().trim()))
+            .filter((id): id is string => Boolean(id)),
+        ];
+
+        targetIds.forEach((targetId) => {
+          if (targetId === note.id) return;
+          const key = `${note.id}:${targetId}`;
+          if (seenLinks.has(key)) return;
+          seenLinks.add(key);
+          contentLinks.push({
+            source: note.id,
+            target: targetId,
+            type: 'reference',
+          });
+        });
       });
 
       // Combine all links
