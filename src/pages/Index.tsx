@@ -10,28 +10,14 @@ import ThemeSelector from '../components/ThemeSelector';
 import Win98Button from '../components/Win98Button';
 import NoteSidebar from '../components/NoteSidebar';
 import UserProfileMenu from '../components/UserProfileMenu';
-import { useTheme } from '../context/ThemeContext';
-import { 
-  LayoutGrid, 
-  LayoutList, 
-  Sparkles, 
-  Grip, 
-  Clock, 
-  Settings, 
-  HelpCircle, 
-  Search, 
-  UserRound 
-} from 'lucide-react';
 
 const Index = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
   const [showThemeSelector, setShowThemeSelector] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [layoutMode, setLayoutMode] = useState<'default' | 'wide' | 'focus'>('default');
-  const { theme } = useTheme();
 
   const getLayoutClass = () => {
     switch (layoutMode) {
@@ -120,14 +106,10 @@ const Index = () => {
                   
                   <h3 className="font-bold mt-4 mb-2">Keyboard Shortcuts:</h3>
                   <div className="win98-inset p-3 mb-4">
-                    <p><strong>Ctrl+N</strong>: Create new note</p>
-                    <p><strong>Ctrl+S</strong>: Save current note</p>
-                    <p><strong>Ctrl+E</strong>: Toggle edit mode</p>
-                    <p><strong>Ctrl+F</strong>: Search in notes</p>
-                    <p><strong>Ctrl+G</strong>: Open graph view</p>
-                    <p><strong>Ctrl+B</strong>: Bold text</p>
-                    <p><strong>Ctrl+I</strong>: Italic text</p>
-                    <p><strong>Ctrl+K</strong>: Insert link</p>
+                    <p><strong>Ctrl+S</strong>: Save current note while editing</p>
+                    <p><strong>Ctrl+B</strong>: Bold text while editing</p>
+                    <p><strong>Ctrl+I</strong>: Italic text while editing</p>
+                    <p><strong>Ctrl+K</strong>: Insert link while editing</p>
                   </div>
                   
                   <h3 className="font-bold mt-4 mb-2">Wiki Linking:</h3>
@@ -189,47 +171,16 @@ const Index = () => {
           )}
         </div>
         
-        <div className="fixed top-4 right-4 z-20 flex gap-2">
-          <Win98Button 
-            variant="icon" 
-            title="User Profile"
-            onClick={() => setShowUserProfile(!showUserProfile)}
-          >
-            <UserRound size={16} />
-          </Win98Button>
-          
-          <Win98Button 
-            variant="icon" 
-            title="Toggle layout"
-            onClick={() => setLayoutMode(prev => 
-              prev === 'default' ? 'wide' : prev === 'wide' ? 'focus' : 'default'
-            )}
-          >
-            {layoutMode === 'default' ? <LayoutGrid size={16} /> : 
-             layoutMode === 'wide' ? <LayoutList size={16} /> : <Grip size={16} />}
-          </Win98Button>
-          
-          <Win98Button 
-            variant="icon" 
-            title="Search notes"
-            onClick={() => setShowSearch(!showSearch)}
-          >
-            <Search size={16} />
-          </Win98Button>
-          
-          <Win98Button 
-            variant="icon" 
-            title="Recent updates"
-            onClick={() => alert('Recent updates feature would be implemented here')}
-          >
-            <Clock size={16} />
-          </Win98Button>
-        </div>
-        
         <Taskbar 
           onOpenHelp={() => setShowHelp(true)} 
           onToggleGraph={() => setShowGraph(!showGraph)}
           onOpenThemeSelector={() => setShowThemeSelector(true)}
+          onOpenProfile={() => setShowUserProfile(true)}
+          onToggleLayout={() => setLayoutMode(prev =>
+            prev === 'default' ? 'wide' : prev === 'wide' ? 'focus' : 'default'
+          )}
+          onOpenSearch={() => setShowSearch(true)}
+          layoutMode={layoutMode}
           showGraph={showGraph}
         />
       </div>

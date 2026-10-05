@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNotes } from '../context/NoteContext';
-import ReactMarkdown from 'react-markdown';
+import SafeMarkdown from './SafeMarkdown';
 import Win98Button from './Win98Button';
 import NotionLikeToolbar from './NotionLikeToolbar';
 import WikiFeatures from './WikiFeatures';
@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 const MarkdownEditor: React.FC = () => {
-  const { currentNote, updateNote, getNoteChildren, createNote } = useNotes();
+  const { currentNote, notes, updateNote, setCurrentNote, getNoteChildren, createNote } = useNotes();
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -202,9 +202,9 @@ const MarkdownEditor: React.FC = () => {
     const wikiLinkRegex = /\[\[(.+?)\]\]/g;
     
     parsedContent = parsedContent.replace(wikiLinkRegex, (match, linkText) => {
-      const linkedNote = currentNote ? getNoteChildren(null).find(note => 
+      const linkedNote = notes.find(note =>
         note.title.toLowerCase() === linkText.toLowerCase()
-      ) : null;
+      );
       
       if (linkedNote) {
         return `[${linkText}](#${linkedNote.id})`;
@@ -242,6 +242,11 @@ const MarkdownEditor: React.FC = () => {
         
         setContent(updatedContent);
         updateNote(currentNote?.id || '', { content: updatedContent });
+      } else if (target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const noteId = target.getAttribute('href')?.slice(1);
+        const linkedNote = notes.find((note) => note.id === noteId);
+        if (linkedNote) setCurrentNote(linkedNote);
       }
     }
   };
@@ -265,15 +270,6 @@ const MarkdownEditor: React.FC = () => {
           e.preventDefault();
           insertMarkdown('[{{text}}](url)');
           break;
-      }
-    }
-    
-    if (e.key === '[' && textareaRef.current) {
-      const textarea = textareaRef.current;
-      const cursorPos = textarea.selectionStart;
-      const textBeforeCursor = content.substring(cursorPos - 1, cursorPos);
-      
-      if (textBeforeCursor === '[') {
       }
     }
     
@@ -482,9 +478,7 @@ const MarkdownEditor: React.FC = () => {
           >
             <div onClick={handleWikiLinkClick}>
               {content ? (
-                <ReactMarkdown className="prose prose-sm max-w-none">
-                  {parseWikiLinks(content)}
-                </ReactMarkdown>
+                <SafeMarkdown content={parseWikiLinks(content)} />
               ) : (
                 <p className="text-gray-500">No content. Click to start editing.</p>
               )}
@@ -510,9 +504,7 @@ const MarkdownEditor: React.FC = () => {
               onClick={handleWikiLinkClick}
             >
               {content ? (
-                <ReactMarkdown className="prose prose-sm max-w-none">
-                  {parseWikiLinks(content)}
-                </ReactMarkdown>
+                <SafeMarkdown content={parseWikiLinks(content)} />
               ) : (
                 <p className="text-gray-500">No content. Click Edit to start writing.</p>
               )}

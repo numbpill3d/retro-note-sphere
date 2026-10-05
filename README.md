@@ -1,122 +1,145 @@
+# RetroNotes
 
-# 🌀 RetroNote
+A local-first Markdown notebook with hierarchical folders, wiki links, backlinks,
+graph visualization, and an unapologetic Windows 98 interface.
 
-*A local-first, encrypted, graph-powered note-taking system with Web 1.0 soul.*
+![RetroNotes main workspace](docs/screenshots/retro-notes-main.png)
 
-![RetroNote Banner](https://your-image-here.com/banner.png)
+## What works today
 
-## ✨ What is RetroNote?
+- **Local browser storage** — notes are saved automatically in `localStorage`;
+  there is no account, backend, telemetry, cloud service, or automatic third-party
+  font request. Remote Markdown images are blocked in preview.
+- **Markdown editor and preview** — headings, emphasis, lists, task lists, code,
+  quotes, links, images, and tables.
+- **Hierarchical organization** — create notes and folders, nest children, and
+  browse them from the Notes Explorer.
+- **Wiki links and backlinks** — `[[Note Title]]` links connect notes and feed
+  the backlink and graph views.
+- **Additional relationship syntax** — priority, cross-reference, additive,
+  equivalent, alternate, and commentary links.
+- **Interactive graph view** — inspect note relationships using D3.
+- **History and wiki metadata** — note status, contributors, versions, and local
+  revision snapshots.
+- **Retro themes** — Windows 98, terminal, cyberpunk, Y2K, and other bundled
+  visual presets.
+- **Layouts and utilities** — default, wide, and focus layouts plus search,
+  profile, help, sorting, filtering, tags, and favorites.
 
-**RetroNote** is a lightweight, extensible, and beautiful note-taking app inspired by the golden era of the web — think Geocities, BBS terminals, and textured scrollbars. Designed for digital wanderers, hackers, writers, and memory hoarders, RetroNote lets you write, organize, and visualize your thoughts in a deeply personal way.
+## Important data note
 
-It’s like Notion and Obsidian had a kid raised by an old Angelfire forum.
+RetroNotes stores data as plain JSON in the current browser profile under the
+`retro-notes-data` local-storage key. It is local-first, but it is **not
+encrypted** and does not currently provide sync, import/export, or automatic
+backups. Clearing site data or using a private browsing session can remove your
+notes.
 
----
+Do not treat the current version as a secure vault. Export and encryption are
+future work.
 
-## 🔧 Features
+## Run locally
 
-* 🧠 **Graph-based linking** — Connect notes into an interconnected web
-* 🗂️ **Tree-based structure** — Nest, collapse, and expand ideas like branches
-* ✍️ **Markdown + Rich Text** — Write your way
-* 🔒 **End-to-end encryption** — Private by design
-* 🌐 **Web, Desktop & Mobile** — Cross-platform by default
-* ⚡ **Offline-first** — Works without the cloud
-* 🎨 **Custom themes** — Includes Terminal Green, Wasteland Amber, and Digital Gothic
-* 📦 **Plugin support** — Extend with your own tools and hacks
-* 🧩 **Templating system** — Build reusable layouts for characters, projects, logs, etc.
-* 🧠 **Auto-linking & Backlinking** — Build a second brain that thinks with you
-* 🌌 **Star Map Mode** — A dreamlike, zoomable cosmos view of your notes
+Requirements:
 
----
-
-## 🚀 Getting Started
-
-### 1. Clone the repo
+- Node.js 20.19+ or 22.12+
+- npm 10+
 
 ```bash
-git clone https://github.com/yourname/retronote.git
-cd retronote
-```
-
-### 2. Install dependencies
-
-```bash
+git clone https://github.com/numbpill3d/retro-note-sphere.git
+cd retro-note-sphere
 npm install
-```
-
-### 3. Run it locally
-
-```bash
 npm run dev
 ```
 
-### 4. (Optional) Build for production
+Open the local URL printed by Vite (normally `http://localhost:8080`).
+
+## Quality checks
+
+```bash
+npm run lint
+npm run build
+npm audit
+```
+
+Run lint and production build together:
+
+```bash
+npm run check
+```
+
+Run `npm audit` separately to verify the dependency tree.
+
+## Production build
 
 ```bash
 npm run build
+npm run preview
 ```
 
----
+The static production output is written to `dist/` and can be hosted on any
+static web server. Because note data remains in each browser's local storage,
+deploying a new build does not transfer notes between devices or domains.
 
-## 📁 File Structure
+## Linking syntax
 
-```
-/src
-  /components       → UI components (graph viewer, sidebar, editor)
-  /pages            → Main app pages
-  /styles           → Retro-inspired themes
-  /core             → Graph engine, encryption, data handling
-/public
-  index.html        → Entry point
+Standard wiki links:
+
+```markdown
+[[Basic Concepts]]
 ```
 
----
+Additional relationship markers recognized by backlink and graph parsing:
 
-## 🛡️ Privacy First
+```text
+(-::- Critical Information -::-)  priority
+-x- Related Research -x-          cross-reference
++ Advanced Topics                 builds on
+= Equivalent Concept              equivalent
+/ Alternate Perspective /         alternate
+// Commentary //                   annotation
+```
 
-RetroNote is **local-first** and **end-to-end encrypted**. Your thoughts stay yours. No telemetry. No tracking. No cloud dependency. Run it on a flash drive if you want. Your data, your way.
+Links resolve against note titles. Wiki links can create a new page when the
+target does not exist.
 
----
+## Project structure
 
-## 🧪 Roadmap
+```text
+src/
+├── components/
+│   ├── GraphView.tsx
+│   ├── MarkdownEditor.tsx
+│   ├── NoteTree.tsx
+│   ├── Taskbar.tsx
+│   ├── ThemeSelector.tsx
+│   └── notes/ and ui/
+├── context/
+│   ├── NoteContext.tsx
+│   └── ThemeContext.tsx
+├── pages/
+│   └── Index.tsx
+└── main.tsx
+```
 
-* [ ] Tag system
-* [ ] Sync via local mesh or secure self-hosting
-* [ ] AI summarizer / memory browser
-* [ ] Theme builder UI
-* [ ] Export to .txt, .md, .pdf, or even .gmi
+## Current limitations
 
----
+- Browser-only; no packaged desktop or mobile application.
+- No encryption, authentication, sync, collaboration, plugins, or server-side
+  storage.
+- No import/export or backup workflow yet.
+- Search and some advanced toolbar actions are still basic UI implementations.
+- Large notebooks may hit browser local-storage limits.
 
-## 🧙‍♂️ Who’s It For?
+## Technology
 
-* Storytellers and worldbuilders
-* Coders and cyberpunks
-* Schizo post-theorists
-* People who keep 900 tabs open
-* Anyone who misses the real internet
+React 18, TypeScript, Vite 8, Tailwind CSS, shadcn/Radix UI, D3,
+React Markdown, and browser local storage.
 
----
+## Credits
 
-## 💾 Download & Install
+Created by [voidrane](https://voidrane.nekoweb.org) and
+[numbpilled](https://numbpilled.neocities.org).
 
-Coming soon to:
+## License
 
-* [ ] Windows (.exe)
-* [ ] macOS (.app)
-* [ ] Linux (AppImage / .deb)
-* [ ] Android APK
-
----
-
-## 📜 License
-
-MIT — do what you want, just don’t make it lame.
-
----
-
-## 🖤 Retro is the Future.
-
-> *"I remembered everything until I wrote it down. Now I remember more."*
-
-RetroNote is made with care by \[Your Name] — reach out, fork it, and make it weirder.
+MIT — see [LICENSE](LICENSE).

@@ -2,12 +2,16 @@
 import React, { useState, useEffect } from 'react';
 import Win98Button from './Win98Button';
 import { useNotes } from '../context/NoteContext';
-import { PlusCircle, HelpCircle, BarChart2, Palette } from 'lucide-react';
+import { PlusCircle, HelpCircle, BarChart2, Palette, UserRound, LayoutGrid, LayoutList, Grip, Search } from 'lucide-react';
 
 interface TaskbarProps {
   onOpenHelp: () => void;
   onToggleGraph: () => void;
   onOpenThemeSelector: () => void;
+  onOpenProfile: () => void;
+  onToggleLayout: () => void;
+  onOpenSearch: () => void;
+  layoutMode: 'default' | 'wide' | 'focus';
   showGraph: boolean;
 }
 
@@ -15,6 +19,10 @@ const Taskbar: React.FC<TaskbarProps> = ({
   onOpenHelp, 
   onToggleGraph, 
   onOpenThemeSelector,
+  onOpenProfile,
+  onToggleLayout,
+  onOpenSearch,
+  layoutMode,
   showGraph 
 }) => {
   const { createNote } = useNotes();
@@ -65,6 +73,16 @@ const Taskbar: React.FC<TaskbarProps> = ({
       </div>
       
       <div className="flex items-center space-x-2">
+        <Win98Button variant="icon" onClick={onOpenProfile} title="User profile">
+          <UserRound size={16} />
+        </Win98Button>
+        <Win98Button variant="icon" onClick={onToggleLayout} title="Toggle layout">
+          {layoutMode === 'default' ? <LayoutGrid size={16} /> :
+           layoutMode === 'wide' ? <LayoutList size={16} /> : <Grip size={16} />}
+        </Win98Button>
+        <Win98Button variant="icon" onClick={onOpenSearch} title="Search notes">
+          <Search size={16} />
+        </Win98Button>
         <Win98Button 
           onClick={onOpenHelp}
           title="Open Help"
